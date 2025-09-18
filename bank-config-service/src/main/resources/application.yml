@@ -1,0 +1,21 @@
+server:
+ port: 9002
+ servlet:
+  context-path: /Config
+  
+spring:
+ application:
+  name: bank-config-service
+# cloud:
+#  config:
+#   server:
+#    git:
+#     uri: https://github.com/your-org/bank-config-repo
+#     default-label: main
+  
+#================================
+# Allow Cross-Origins
+#================================  
+ui:
+ cross:
+  url: "*"
