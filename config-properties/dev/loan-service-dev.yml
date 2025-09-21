@@ -1,0 +1,28 @@
+spring:
+ datasource:
+#  url: jdbc:postgresql://ep-empty-surf-adsq0sfw-pooler.c-2.us-east-1.aws.neon.tech:5432/bank-app-db?sslmode=require
+#  username: neondb_owner
+#  password: npg_w5UGmkIbOg8A
+  url: jdbc:postgresql://localhost:5432/bankdb
+  username: bankapp
+  password: LexisNexis@2025
+  driver-class-name: org.postgresql.Driver
+  
+#================================
+# logging
+#================================
+#Log files rotate when they reach 10 MB If Change Then Configured...
+logging:
+ file:
+  name: D://Bank-App/logs/loan-service-dev.log
+  #max-size: 1KB
+  max-history: 5
+ pattern:
+  console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+  file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+ level:
+  root: INFO
+  org.springframework: INFO
+
+  
+ 

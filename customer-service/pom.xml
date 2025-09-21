@@ -31,12 +31,7 @@
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
 	</properties>
 	<dependencies>
-		 <!-- Shared DTOs -->
-	   <!-- <dependency>
-	      <groupId>com.relx.banking.configdto</groupId>
-	      <artifactId>bank-config-dto</artifactId>
-	      <version>1.0.0</version>
-	    </dependency>-->
+		 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -104,6 +99,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Shared DTOs -->
 		<dependency>
 			<groupId>com.relx.banking.commondto</groupId>
 			<artifactId>shared-common-dto</artifactId>
