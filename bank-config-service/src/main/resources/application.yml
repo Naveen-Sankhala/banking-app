@@ -6,6 +6,8 @@ server:
 spring:
  application:
   name: bank-config-service
+ profiles:
+  active: dev
 # cloud:
 #  config:
 #   server:

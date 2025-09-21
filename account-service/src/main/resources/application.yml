@@ -1,0 +1,16 @@
+server:
+ port: 9006
+ servlet:
+  context-path: /Account
+
+spring:
+ application:
+  name:account-service
+ profiles:
+  active: dev
+#================================
+# Allow Cross-Origins
+#================================  
+ui:
+ cross:
+  url: "*"
