@@ -1,8 +1,5 @@
 spring:
  datasource:
-#  url: jdbc:postgresql://ep-empty-surf-adsq0sfw-pooler.c-2.us-east-1.aws.neon.tech:5432/bank-app-db?sslmode=require
-#  username: neondb_owner
-#  password: npg_w5UGmkIbOg8A
   url: jdbc:postgresql://localhost:5432/bankdb
   username: bankapp
   password: LexisNexis@2025

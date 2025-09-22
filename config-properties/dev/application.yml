@@ -53,11 +53,12 @@ spring:
 # Other Service -url
 # ===============================
 config-service:
-  url: http://localhost:9002/Config
-account-service:
-  url: http://localhost:9006/Account
+  url: http://localhost:9004/config
 customer-service:
   url: http://localhost:9005/Customer
+account-service:
+  url: http://localhost:9006/Account
+
 
 # ===============================
 # Acutator -log Info

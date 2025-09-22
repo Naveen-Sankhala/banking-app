@@ -13,7 +13,7 @@ import com.relx.banking.accountservice.dto.CustomerDto;
  * Sep 11, 2025
  */
 
-@FeignClient(name = "customer-service", url = "${customer.service.url}")
+@FeignClient(name = "customer-service", url = "${customer-service.url}")
 public interface CustomerClient {
 
 	@GetMapping("/customer")

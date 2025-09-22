@@ -1,0 +1,22 @@
+server:
+ port: 9003
+# servlet:
+#  context-path: /gateway
+   
+spring:
+ application:
+  name: api-gateway
+ cloud:
+  config:
+   profile: dev
+  gateway:
+   routes:
+    - id: bank-config-service
+      uri: lb://BANK-CONFIG-SERVICE
+      predicates:
+       - Path=/bank-config/**
+
+eureka:
+ client:
+  service-url:
+   defaultZone: http://localhost:9001/eureka/
