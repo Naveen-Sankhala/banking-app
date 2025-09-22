@@ -9,6 +9,13 @@
 #   overrideSystemProperties: false
 
 # ===============================
+# Eureka discovery client 
+# ===============================
+eureka:
+ client:
+  service-url:
+   defaultZone: http://localhost:9001/eureka/
+# ===============================
 # Datasource
 # ===============================
 spring:
