@@ -1,0 +1,24 @@
+
+server:
+ port: 9002
+ servlet:
+  context-path: /config-server
+  
+eureka:
+ client:
+  service-url:
+   defaultZone: http://localhost:9001/eureka/
+  
+spring:
+ application:
+  name: config-server
+ profiles:
+  active: dev
+ cloud:
+  config:
+   server:
+    git:
+     uri: https://github.com/Naveen-Sankhala/banking-app.git #https://github.com/your-org/bank-config-repo
+     search-paths: config-properties/dev
+     default-label: main
+ 

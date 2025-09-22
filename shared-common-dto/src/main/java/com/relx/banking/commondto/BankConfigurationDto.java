@@ -2,6 +2,7 @@ package com.relx.banking.commondto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -38,5 +39,5 @@ public class BankConfigurationDto implements Serializable{
 	private String sameLoanAccountYn;
 	private String clientCode;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-	private LocalDate createdDate;
+	private LocalDateTime createdDate;
 }

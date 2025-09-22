@@ -7,3 +7,11 @@ server:
  port: 9005
  servlet:
   context-path: /Customer
+  
+#spring:
+#  application:
+#    name: bank-service   # must match file name: bank-service.yml
+#  cloud:
+#    config:
+#      uri: http://localhost:9002/Config
+#      profile: dev       # chooses config-properties/dev

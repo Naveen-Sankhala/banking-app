@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RefreshScope
 @RestController
-@RequestMapping("/config")
+@RequestMapping("/")
 public class ConfigController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConfigController.class);

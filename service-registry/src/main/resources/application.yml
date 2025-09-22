@@ -1,0 +1,15 @@
+server:
+  port: 9001   # default port is 8761 for Eureka Server
+
+spring:
+ application:
+  name: service-registry
+# servlet:
+#  context-path: /eureka
+   
+eureka:
+  client:
+    register-with-eureka: false  # server doesn\u2019t register itself
+    fetch-registry: false        # server doesn\u2019t fetch registry
+  server:
+    wait-time-in-ms-when-sync-empty: 0
