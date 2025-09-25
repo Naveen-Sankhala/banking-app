@@ -1,5 +1,5 @@
 server:
- port: 9003
+ port: 9004
 # servlet:
 #  context-path: /gateway
    
@@ -14,9 +14,15 @@ spring:
     - id: bank-config-service
       uri: lb://BANK-CONFIG-SERVICE
       predicates:
-       - Path=/bank-config/**
+       - Path=/config/**
 
 eureka:
  client:
   service-url:
    defaultZone: http://localhost:9001/eureka/
+   
+security:
+ oauth2:
+  resourceserver:
+   jwt:
+    issuer-uri: http://localhost:9003
