@@ -52,12 +52,16 @@ spring:
 # ===============================
 # Other Service -url
 # ===============================
+auth-server:
+  url: http://localhost:9003/Auth
+api-gateway:
+  url: http://localhost:9004  
 config-service:
-  url: http://localhost:9004/config
+  url: http://localhost:9011/config
 customer-service:
-  url: http://localhost:9005/Customer
+  url: http://localhost:9012/Customer
 account-service:
-  url: http://localhost:9006/Account
+  url: http://localhost:9013/Account
 
 
 # ===============================
@@ -74,3 +78,9 @@ management:
    enabled: true
   health:
    show-details: always
+   
+#================================
+# Allow Cross-Origins
+#================================  
+cross:
+ url: "*"

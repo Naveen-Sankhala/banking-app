@@ -66,3 +66,9 @@ management:
    enabled: true
   health:
    show-details: always
+   
+#================================
+# Allow Cross-Origins
+#================================  
+cross:
+ url: "*"

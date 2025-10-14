@@ -1,5 +1,7 @@
 package com.relx.banking.customerservice.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.relx.banking.customerservice.dto.CustomerRequestDto;
 import com.relx.banking.customerservice.dto.CustomerResponseDto;
@@ -53,8 +57,26 @@ public class CustomerController {
 	private MessageSource messageSource;
 	
 	@PostMapping("")
-	public ResponseEntity<?> createNewAccount(@RequestBody CustomerRequestDto customerRequestDto) throws Exception{
+	public ResponseEntity<?> createNewCustomer(@RequestBody CustomerRequestDto customerRequestDto) throws Exception{
 		String cifNo = iCustomerService.createNewCustomer(customerRequestDto);
+		if(cifNo !=null)
+			return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true,String.format("Customer create successfuly , CIF ID :: "+cifNo)));
+		else
+			return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(false,messageSource.getMessage("4", null,LocaleContextHolder.getLocale())));
+	}
+	
+	@PostMapping("bulk")
+	public ResponseEntity<?> createBulkNewCustomer(@RequestBody List<CustomerRequestDto> customerReqDto) throws Exception{
+		List<String> cifNo = iCustomerService.createBulkNewCustomer(customerReqDto);
+		if(cifNo !=null)
+			return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true,String.format("Customer create successfuly , CIF ID :: "+cifNo)));
+		else
+			return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(false,messageSource.getMessage("4", null,LocaleContextHolder.getLocale())));
+	}
+	
+	@PostMapping(value ="import" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<?> importAndCreateNewCustomer(@RequestParam("cust-detail-file") MultipartFile custDetailsFile) throws Exception{
+		List<String> cifNo = iCustomerService.importAndCreateNewCustomer(custDetailsFile);
 		if(cifNo !=null)
 			return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true,String.format("Customer create successfuly , CIF ID :: "+cifNo)));
 		else

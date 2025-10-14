@@ -2,9 +2,12 @@ package com.relx.banking.authservice.dao;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.relx.banking.authservice.entity.UserLog;
 import com.relx.banking.authservice.entity.Users;
 
 /**
@@ -13,8 +16,8 @@ import com.relx.banking.authservice.entity.Users;
  */
 @Service
 public interface IAuthorizationDao {
-
-	LocalDateTime addUserLog(HashMap<String, Object> userLog);
+	
+	HashMap<String, Object> loadUserByUsername(String username, Long branchId);
 
 	boolean isRefreshTokenExists(String remoteAddr, long userId, String token);
 
@@ -22,6 +25,12 @@ public interface IAuthorizationDao {
 
 	Users loadUserByUsername(String username);
 
-	HashMap<String, Object> getAuthority(long userId, long hospitalId);
+	HashMap<String, Object> getAuthority(long userId, long branchId);
+
+	List<UserLog> findByUserLogs(Long userId);
+
+	boolean saveAndFlushUserLogs(UserLog userLogs);
+
+	LocalDateTime getUserLastLoggedInTime(Long userId);
 
 }

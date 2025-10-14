@@ -1,3 +1,9 @@
-com\relx\banking\commondto\BankConfigurationDto.class
-com\relx\banking\commondto\App.class
 com\relx\banking\commondto\ConfigChangedEvent.class
+com\relx\banking\commondto\CityDto.class
+com\relx\banking\commondto\StateDto.class
+com\relx\banking\commondto\BankConfigurationDto.class
+com\relx\banking\commondto\GenderTitleDto.class
+com\relx\banking\commondto\BranchDetailsDto.class
+com\relx\banking\commondto\MasCurrencyDto.class
+com\relx\banking\commondto\App.class
+com\relx\banking\commondto\RelationDto.class

@@ -1,8 +1,11 @@
 package com.relx.banking.bankconfig.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.relx.banking.bankconfig.entity.BankConfiguration;
+import com.relx.banking.bankconfig.entity.Branch;
 
 /**
  * @author Naveen.Sankhala
@@ -14,5 +17,11 @@ public interface IConfigDao {
 	BankConfiguration saveBankConfiguration(BankConfiguration config);
 	
 	BankConfiguration getBankConfiguration();
+
+	Object getBranchDetails(Long branchId, String status);
+
+	Object getBranchDetails(String branchCode, String status);
+
+	List<Branch> getBranchDetailsByZoneId(Long zrId, String status);
 
 }

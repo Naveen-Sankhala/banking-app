@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.relx.banking.authservice.entity.UserLog;
+import com.relx.banking.authservice.entity.UserRoles;
 import com.relx.banking.authservice.entity.Users;
 import com.relx.banking.authservice.repository.UserLogRepository;
 import com.relx.banking.authservice.repository.UserRolesRepository;
@@ -34,30 +35,23 @@ public class AuthorizationDaoImpl implements IAuthorizationDao {
 	private UsersRepository usersJpaRepo;
 	
 	@Autowired
-	private UserLogRepository userLogJpaRepo;
+	private UserLogRepository userLogRepo;
 	
 	@Autowired
-	private UserRolesRepository userRolesJpaRepo;
+	private UserRolesRepository userRolesRepo;
 	
-	public HashMap<String, Object> loadUserByUsername(String username, long branchId) throws UsernameNotFoundException {
+	public HashMap<String, Object> loadUserByUsername(String username, Long branchId) throws UsernameNotFoundException {
 		HashMap<String, Object> userDetailsMap = new HashMap<String, Object>();
 		
-		Optional<Users> masUserList = usersJpaRepo.findByUsername(username);
+		Optional<Users> user = usersJpaRepo.findByUsername(username);
 
-		/*List<Users> masUserList= entityManager.createNamedQuery("FIND_BY_USERNAME_AND_USERROLLS_HOSPITAL",Users.class)
-				.setParameter("username", username)
-				.setParameter("hospitalId",hospitalId)
-				.setHint(QueryHints.HINT_PASS_ ISTINCT_THROUGH, false).getResultList();*/
-
-		//List<Users> masUserList=usersJpaRepo.findByUsername(username);
-
-		if (!masUserList.isPresent()) {
+		if (!user.isPresent()) {
 			throw new UsernameNotFoundException(String.format("USER_NOT_FOUND '%s'", username));
 		}
-		//List<UserRoles> userRoles=userRolesJpaRepo.findByUsersUserIdAndHospitalId(findFirst.get().getUserId(),branchId);
+		List<UserRoles> userRoles=userRolesRepo.findByUsersUserIdAndBranchId(user.get().getUserId(),branchId);
 
-		userDetailsMap.put("user", masUserList);
-		//userDetailsMap.put("userRoles", userRoles);
+		userDetailsMap.put("user", user.get());
+		userDetailsMap.put("userRoles", userRoles);
 
 		return userDetailsMap;
 	}
@@ -69,40 +63,22 @@ public class AuthorizationDaoImpl implements IAuthorizationDao {
 	 * .setParameter("roleCode", roles)
 	 * .setHint(QueryHints.HINT_PASS_DISTINCT_THROUGH, false) .getResultList(); }
 	 */
+	
+	@Override
+	public List<UserLog> findByUserLogs(Long userId) {
+		return userLogRepo.findByUserIdOrderByUserLogIdDesc(userId);
+	}
 
 	@Override
-	public LocalDateTime addUserLog(HashMap<String, Object> userLog) {
-
-		UserLog userLogs=null;
-		if(userLog.containsKey("type") && ((String)userLog.get("type")).equalsIgnoreCase("refresh")) {
-			
-			Optional<UserLog> findFirst = userLogJpaRepo.findByUserIdOrderByUserLogIdDesc((Long)userLog.get("userId")).stream()
-					.filter(log -> log.getUserId().equals((Long)userLog.get("userId"))).findFirst();
-			if (!findFirst.isPresent()) {
-				throw new EntityNotFoundException(UserLog.class, "UserId", String.valueOf((Long)userLog.get("userId")));
-			}
-			userLogs=findFirst.get();
-		}
-		else {
-			userLogs=new UserLog();
-
-			if(userLog.containsKey("userId"))
-				userLogs.setUserId((Long) userLog.get("userId"));
-
-			if(userLog.containsKey("ipAddress"))
-				userLogs.setIpAddress((String) userLog.get("ipAddress"));
-
-			userLogs.setLoggedIn(true);
-		}
-
-		if(userLog.containsKey("refreshToken"))
-			userLogs.setRefreshToken((String) userLog.get("refreshToken"));
-
-		userLogJpaRepo.saveAndFlush(userLogs);
-		LocalDateTime lastLoggedInTime = userLogJpaRepo.getLastLoggedInTime(userLogs.getUserId());
-		lastLoggedInTime=lastLoggedInTime!=null?lastLoggedInTime:LocalDateTime.now();
-		return lastLoggedInTime;
+	public boolean saveAndFlushUserLogs(UserLog userLogs) {
+		return userLogRepo.saveAndFlush(userLogs) != null;
 	}
+
+	@Override
+	public LocalDateTime getUserLastLoggedInTime(Long userId) {
+		return userLogRepo.getLastLoggedInTime(userId);
+	}
+	
 
 	@Override
 	public boolean isRefreshTokenExists(String remoteAddr, long userId, String token) {
@@ -110,7 +86,7 @@ public class AuthorizationDaoImpl implements IAuthorizationDao {
 		//Optional<UserLog> findFirst = userLogJpaRepo.findByIpAddressAndUserIdAndRefreshToken(remoteAddr,userId,token).stream()
 		//		.filter(log -> log.getRefreshToken().equals(token)).findFirst();
 		
-		Optional<UserLog> findFirst = userLogJpaRepo.findByUserIdOrderByUserLogIdDesc(userId).stream()
+		Optional<UserLog> findFirst = userLogRepo.findByUserIdOrderByUserLogIdDesc(userId).stream()
 				.filter(log -> log.getUserId().equals(userId)).findFirst();
 		
 		if(findFirst.get().getIpAddress().equals(remoteAddr) && findFirst.get().getRefreshToken().equals(token))
@@ -121,11 +97,11 @@ public class AuthorizationDaoImpl implements IAuthorizationDao {
 
 	@Override
 	public boolean logout(String refreshToken) {
-		UserLog userLogs = userLogJpaRepo.findByRefreshToken(refreshToken);
+		UserLog userLogs = userLogRepo.findByRefreshToken(refreshToken);
 		userLogs.setRefreshToken(null);
-		userLogs.setLoggedIn(false);
+		userLogs.setIsLoggedIn('N');;
 		userLogs.setLoggedOutTime(LocalDateTime.now());
-		return userLogJpaRepo.save(userLogs) != null;
+		return userLogRepo.save(userLogs) != null;
 	}
 
 	@Override
@@ -147,7 +123,7 @@ public class AuthorizationDaoImpl implements IAuthorizationDao {
 		//List<String> userRoles= userRolesJpaRepo.findByUsersUserIdAndHospitalId(userId,hospitalId)
 		//		.stream().map(map -> map.getMasRole().getRoleCode()).collect(Collectors.toList());
 		
-		Optional<UserLog> findFirst = userLogJpaRepo.findByUserIdOrderByUserLogIdDesc(userId).stream()
+		Optional<UserLog> findFirst = userLogRepo.findByUserIdOrderByUserLogIdDesc(userId).stream()
 				.filter(log -> log.getUserId().equals(userId)).findFirst();
 		
 		if (!findFirst.isPresent()) {
@@ -158,5 +134,7 @@ public class AuthorizationDaoImpl implements IAuthorizationDao {
 		authorities.put("refToken", findFirst.get().getRefreshToken());
 		return authorities;
 	}
+
+	
 
 }

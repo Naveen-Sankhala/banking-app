@@ -20,6 +20,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -88,6 +89,9 @@ public class Customer implements Serializable {
 
 	@OneToMany(mappedBy="customer",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Address> address;
+	
+	@OneToOne(mappedBy="customer",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private CustomerDetails customerDetails;
 	
 //	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
 //	private List<JointAccountHolder> jointAccounts = new ArrayList<>();

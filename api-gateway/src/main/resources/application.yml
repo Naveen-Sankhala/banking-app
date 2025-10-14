@@ -2,8 +2,20 @@ server:
  port: 9004
 # servlet:
 #  context-path: /gateway
+
+eureka:
+ client:
+  service-url:
+   defaultZone: http://localhost:9001/eureka/
+
+spring:   
+ security:
+  oauth2:
+   resourceserver:
+    jwt:
+     issuer-uri: http://localhost:9003  # auth-server issuer
    
-spring:
+
  application:
   name: api-gateway
  cloud:
@@ -15,14 +27,16 @@ spring:
       uri: lb://BANK-CONFIG-SERVICE
       predicates:
        - Path=/config/**
+      filters:
+       - PreserveHostHeader=true
+    - id: customer-service
+      uri: lb://CUSTOMER-SERVICE
+      predicates:
+       - Path=/Customer/**
+      filters:
+       - PreserveHostHeader=true
+    - id: account-service
+      uri: lb://ACCOUNT-SERVICE
+      predicates:
+       - Path=/Account/**
 
-eureka:
- client:
-  service-url:
-   defaultZone: http://localhost:9001/eureka/
-   
-security:
- oauth2:
-  resourceserver:
-   jwt:
-    issuer-uri: http://localhost:9003

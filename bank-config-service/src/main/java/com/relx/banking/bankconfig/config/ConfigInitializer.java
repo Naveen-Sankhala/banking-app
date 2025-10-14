@@ -1,6 +1,7 @@
 package com.relx.banking.bankconfig.config;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -10,7 +11,11 @@ import org.springframework.stereotype.Component;
 
 import com.relx.banking.bankconfig.entity.BankConfiguration;
 import com.relx.banking.bankconfig.service.IConfigService;
+import com.relx.banking.bankconfig.service.IMasterService;
 import com.relx.banking.commondto.BankConfigurationDto;
+import com.relx.banking.commondto.GenderTitleDto;
+import com.relx.banking.commondto.MasCurrencyDto;
+import com.relx.banking.commondto.RelationDto;
 
 import jakarta.annotation.PostConstruct;
 
@@ -26,8 +31,11 @@ public class ConfigInitializer {
 	
 	private final IConfigService iConfigService;
 	
-	ConfigInitializer(IConfigService iConfigService){
+	private final IMasterService iMasterService;
+	
+	ConfigInitializer(IConfigService iConfigService,IMasterService iMasterService){
 		this.iConfigService = iConfigService;
+		this.iMasterService = iMasterService;
 	}
 	
 	@PostConstruct
@@ -39,7 +47,15 @@ public class ConfigInitializer {
 		
 		if(config !=null)
 			configMap.put("bankConfig", config);
-
+		
+		MasCurrencyDto masCurrency = iMasterService.getCurrency(config.getCountryId());
+		List<GenderTitleDto> masGenderTitle = iMasterService.getGenderTitle();
+		List<RelationDto> masRelation = iMasterService.getMasRelation();
+		
+		configMap.put("MasCurrency", masCurrency);
+		configMap.put("MasGenderTitle", masGenderTitle);
+		configMap.put("MasRelation", masRelation);
+		
 
 			// Load Bank Date (daily changing)
 			// Load Account Categories

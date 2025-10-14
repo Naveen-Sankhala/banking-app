@@ -14,4 +14,8 @@ public interface IConfigService {
 
 	BankConfigurationDto getBankConfiguration();
 
+	Object getBranchDetails(Long branchId);
+
+	Object getBranchDetails(String branchCode);
+
 }

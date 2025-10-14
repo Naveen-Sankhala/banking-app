@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,59 +19,62 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 /**
  * @author Naveen.Sankhala
  * Sep 24, 2025
  */
 
-//@ApiIgnore
+@Hidden
 @Entity
-@Table(name="USER_ROLES")
+@Table(name="User_Roles")
+@Data
 public class UserRoles implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(name="USERROLE_ID")
+	@Column(name="Userrole_Id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long userRoleId;
 	
-	@Column(name = "ROLE_ID")
-	private Long roleId;
+//	@Column(name = "Role_Id")
+//	private Long roleId;
 	
-//	@OneToOne
-//	@JoinColumn(name="ROLE_ID",insertable=false,updatable=false)
-//	private MasRole masRole;
+	@OneToOne
+	@JoinColumn(name="Role_Id",insertable=false,updatable=false)
+	private MasRole masRole;
 	
-	@Column(name = "HOSPITAL_ID")
-	private Long hospitalId;
+	@Column(name = "Branch_Id")
+	private Long branchId;
 	
 //	@OneToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name="HOSPITAL_ID",insertable=false,updatable=false)
-//	private MasHospital masHospital;
+//	@JoinColumn(name="Branch_Id",insertable=false,updatable=false)
+//	private Branch branch;
 	
-	//@JsonBackReference 
+	@JsonBackReference 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="USER_ID",nullable = false)	
+	@JoinColumn(name="User_Id",nullable = false)	
 	private Users users;
 	
 	@Column(name = "Status")
 	private String status;
 	
-	@Column(name = "CREATED_BY")
+	@Column(name="Created_By")
 	private Long createdBy;
-
+    
 	@CreationTimestamp
-	@Column(name="Created_Date")
-	private LocalDateTime createdDate;
+    @Column(name="Created_Date")
+    private LocalDateTime createdDate;
+    
+    @Column(name="Last_Chg_By")
+	private Long lastChgBy;
+    
+    @UpdateTimestamp
+    @Column(name="Last_Chg_Date")
+    private LocalDateTime lastChgDate;
 
-	@Column(name = "LAST_CHG_BY")
-	private Long lastChangedBy;
-
-	@UpdateTimestamp
-	@Column(name="last_chg_date")
-	private LocalDateTime lastChgDate;
 
 
 }

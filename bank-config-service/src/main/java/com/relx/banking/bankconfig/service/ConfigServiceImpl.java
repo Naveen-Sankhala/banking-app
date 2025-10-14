@@ -43,4 +43,16 @@ public class ConfigServiceImpl implements IConfigService {
         );
         return saved;
     }
+
+	@Override
+	public Object getBranchDetails(Long branchId) {
+		
+		return iConfigDao.getBranchDetails(branchId,"Y");
+	}
+
+	@Override
+	public Object getBranchDetails(String branchCode) {
+		
+		return iConfigDao.getBranchDetails(branchCode,"Y");
+	}
 }

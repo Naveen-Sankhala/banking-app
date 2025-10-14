@@ -7,6 +7,14 @@ spring:
   oauth2:
    authorizationserver:
     issuer: http://localhost:9003
+   client-id: bank-web
+   client-secret:
+   redirect-uri:
+   authorization-uri: /oauth2/authorize
+   token-uri: /oauth2/token
+   token-expiration: 120
+   refreshToken-expiration: 180
+    
 
 server:
  port: 9003
@@ -17,4 +25,22 @@ eureka:
  client:
   service-url:
    defaultZone: http://localhost:9001/eureka/
+   
+
+corss:
+ url: "*" 
+#================================
+#JWT Setting
+#================================
+#
+#oauth2:
+# signing.key.secret: bank-web
+# get.token.uri: /oauth2/token
+# authorize.token.uri: /oauth2/authorize
+# logout.token.uri: /logout
+# refresh.token.uri: /refresh
+# http.request.header: Authorization
+# token.expiration.in.seconds: 120
+# refreshToken.expiration.in.seconds: 180
+
    

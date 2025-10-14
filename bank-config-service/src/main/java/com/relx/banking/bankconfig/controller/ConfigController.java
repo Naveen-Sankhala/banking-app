@@ -1,5 +1,7 @@
 package com.relx.banking.bankconfig.controller;
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +10,12 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+//import org.springframework.security.core.annotation.AuthenticationPrincipal;
+//import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.relx.banking.bankconfig.config.ConfigInitializer;
@@ -34,7 +39,15 @@ public class ConfigController {
 	private final IConfigService iConfigService;
 	
 	private final  ConfigInitializer configInitializer;
-
+	
+//	 @GetMapping
+//    public ResponseEntity<String> accounts(@AuthenticationPrincipal Jwt jwt) {
+//        String username = jwt.getSubject();
+//        String subject = jwt.getSubject();
+//        Collection<String> scopes = jwt.getClaimAsStringList("scope"); // or use authorities mapping
+//        return ResponseEntity.ok("Accounts for user: " + username + "Requested by: " + subject + " scopes: " + scopes);
+//	}
+	 
 	@GetMapping("bank-config")
 	public ResponseEntity<?> getCurrentBalanceOfAccount()throws Exception{
 		return ResponseEntity.status(HttpStatus.OK).body(iConfigService.getBankConfiguration());
@@ -52,6 +65,22 @@ public class ConfigController {
 			return ResponseEntity.status(HttpStatus.OK).body(value);
 		else
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    
+    
+   
+    @GetMapping("branch")
+    public ResponseEntity<?> getBranchDetails(   
+    @RequestParam(name ="branch-id" , required = false) Long  branchId,
+    @RequestParam(name ="branch-code", required = false) String branchCode)throws Exception{
+
+    	if (branchId != null) {
+    		return ResponseEntity.status(HttpStatus.OK).body(iConfigService.getBranchDetails(branchId));
+    	} else if (branchCode != null) {
+    		return ResponseEntity.status(HttpStatus.OK).body(iConfigService.getBranchDetails(branchCode));
+    	}
+
+    	return ResponseEntity.badRequest().body("Either Branch-Id or Branch-Code must be provided");
     }
 
 }

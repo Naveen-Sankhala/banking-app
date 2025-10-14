@@ -13,11 +13,11 @@ spring:
   name: bank-config-service
  profiles:
   active: dev
- security:
-  oauth2:
-   resourceserver:
-    jwt:
-     issuer-uri: http://localhost:9003  # same as auth-service
- 
+# security:
+#  oauth2:
+#   resourceserver:
+#    jwt:
+#     issuer-uri: http://localhost:9003  # same as auth-service
+# 
 
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.relx.banking.customerservice.dto.CustomerAddressDto;
 import com.relx.banking.customerservice.dto.CustomerRequestDto;
@@ -16,6 +17,10 @@ import com.relx.banking.customerservice.dto.CustomerResponseDto;
 public interface ICustomerService {
 
 	String createNewCustomer(CustomerRequestDto accountRequestDto);
+	
+	List<String> createBulkNewCustomer(List<CustomerRequestDto> customerReqDto);
+
+	List<String> importAndCreateNewCustomer(MultipartFile custDetailsFile);
 
 	CustomerResponseDto getCustomerDetails(String cifNo);
 	
@@ -30,7 +35,5 @@ public interface ICustomerService {
 	Map<String, Object> getAllCustomer(String custName, int page, int size);
 
 	boolean verifyCustomer(String cifNo);
-
-	
 
 }

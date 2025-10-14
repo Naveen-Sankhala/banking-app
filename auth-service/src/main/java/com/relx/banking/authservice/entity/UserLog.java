@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +23,7 @@ import lombok.Data;
  * @author Naveen.Sankhala
  * Sep 24, 2025
  */
-//@ApiIgnore
+@Hidden
 @Entity
 @Table(name="USER_LOG")
 @Data
@@ -32,7 +33,7 @@ public class UserLog implements Serializable {
 
 	@JsonIgnore
 	@Id
-	@Column(name="UserLog_Id")
+	@Column(name="Userlog_Id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long userLogId;
 	
@@ -46,8 +47,8 @@ public class UserLog implements Serializable {
     private String ipAddress;
     
     @NotNull
-    @Column(name="isLoggedIn")
-    private boolean isLoggedIn;
+    @Column(name="Is_Logged_In")
+    private Character isLoggedIn;
     
     @JsonIgnore
     @Lob
@@ -56,11 +57,11 @@ public class UserLog implements Serializable {
     
     @CreationTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-    @Column(name="Logged_InTime")
+    @Column(name="Logged_In_Time")
 	private LocalDateTime loggedInTime;
     
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-    @Column(name="Logged_OutTime")
+    @Column(name="Logged_Out_Time")
 	private LocalDateTime loggedOutTime;
 
 

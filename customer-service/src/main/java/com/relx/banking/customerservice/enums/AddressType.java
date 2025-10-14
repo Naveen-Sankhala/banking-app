@@ -6,7 +6,7 @@ package com.relx.banking.customerservice.enums;
  */
 public enum AddressType {
 
-	BUSINESS,        // Office or business address
-	CORRESPONDENCE,  // Mailing / communication address
-	RESIDENTIAL      // Home / permanent address
+	BUSINESS,       // Office or business address
+	LOCAL,  		// Mailing / communication address
+	PERMANENT      	// Home / permanent address
 }
