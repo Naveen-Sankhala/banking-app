@@ -10,6 +10,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 //import org.springframework.security.core.annotation.AuthenticationPrincipal;
 //import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.relx.banking.bankconfig.config.ConfigInitializer;
 import com.relx.banking.bankconfig.service.IConfigService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -32,6 +34,8 @@ import lombok.RequiredArgsConstructor;
 @RefreshScope
 @RestController
 @RequestMapping("/")
+@CrossOrigin(origins = "${cross.url}")
+@Tag(name ="Config-controller", description = "Set of end points retrieving & store Configuration details")
 public class ConfigController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConfigController.class);

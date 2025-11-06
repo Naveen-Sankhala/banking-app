@@ -44,10 +44,17 @@ spring:
 # RabbitMQ Listener
 # ===============================   
  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest 
+  host: localhost
+  port: 5672
+  username: guest
+  password: guest
+  listener:
+   simple:
+    default-requeue-rejected: false
+  message-converter:
+   json:
+    trusted-packages: com.relx.banking,java.util,java.lang
+     
 
 config:
  init:

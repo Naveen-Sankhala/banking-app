@@ -30,14 +30,16 @@ import com.relx.banking.customerservice.dto.CustomerRequestDto;
 import com.relx.banking.customerservice.service.ICustomerService;
 import com.relx.banking.customerservice.util.exceptionhandling.ApiResponse;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 /**
  * @author Naveen Sankhala
  */
 @RestController
 @RequestMapping("/customer")
-//@CrossOrigin(origins = "${ui.cross.url}")
-//@Tag(name ="Account-controller", description = "Set of end points retrieving & store Account details")
+@CrossOrigin(origins = "${cross.url}")
+@Tag(name ="Customer-controller", description = "Set of end points retrieving & store Customerdetails")
 public class CustomerController {
 
 	private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);

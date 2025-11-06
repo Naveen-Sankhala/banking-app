@@ -8,11 +8,11 @@ server:
  servlet:
   context-path: /Customer
   
- rabbitmq:
-  listener:
-   simple:
-    default-requeue-rejected: false
-  message-converter:
-   json:
-    trusted-packages: com.relx.banking,java.util,java.lang
-
+# rabbitmq:
+#  listener:
+#   simple:
+#    default-requeue-rejected: false
+#  message-converter:
+#   json:
+#    trusted-packages: com.relx.banking,java.util,java.lang
+#

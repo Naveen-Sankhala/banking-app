@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
@@ -27,13 +26,15 @@ import com.relx.banking.accountservice.dto.AccountResponseDto;
 import com.relx.banking.accountservice.service.IAccountService;
 import com.relx.banking.accountservice.util.exceptionhandling.ApiResponse;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 /**
  * @author Naveen Sankhala
  */
 @RestController
 @RequestMapping("/accounts")
-@CrossOrigin(origins = "${ui.cross.url}")
-//@Tag(name ="Account-controller", description = "Set of end points retrieving & store Account details")
+@CrossOrigin(origins = "${cross.url}")
+@Tag(name ="Account-controller", description = "Set of end points retrieving & store Account details")
 public class AccountController {
 
 	private static final Logger logger = LoggerFactory.getLogger(AccountController.class);

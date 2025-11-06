@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.relx.banking.bankconfig.service.IMasterService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.PathParam;
 import lombok.RequiredArgsConstructor;
 
@@ -21,9 +23,10 @@ import lombok.RequiredArgsConstructor;
  */
 
 @RequiredArgsConstructor
-@RefreshScope
 @RestController
 @RequestMapping("/")
+@CrossOrigin(origins = "${cross.url}")
+@Tag(name ="Master-controller", description = "Set of end points retrieving & store Configuration details")
 public class MasterController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MasterController.class);
