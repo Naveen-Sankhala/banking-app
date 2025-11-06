@@ -49,6 +49,12 @@ spring:
     username: guest
     password: guest 
 
+config:
+ init:
+  wait:
+   attempts: 3
+   ms: 1000
+
 # ===============================
 # Other Service -url
 # ===============================
@@ -84,3 +90,19 @@ management:
 #================================  
 cross:
  url: "*"
+
+#================================
+# Swagger-UI
+#================================ 
+springdoc:
+ api-docs:
+  enabled: true
+  path: /v3/api-docs
+  title: "Bank Application"
+  description: "Bank-app Service - Execute document"
+  #version: 1.0.0
+ swagger-ui:
+  enabled: true
+  path: /swagger-ui/index.html
+  
+

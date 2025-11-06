@@ -1,4 +1,4 @@
-package com.relx.banking.accountservice.config;
+package com.relx.banking.bankconfig.config;
 
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
