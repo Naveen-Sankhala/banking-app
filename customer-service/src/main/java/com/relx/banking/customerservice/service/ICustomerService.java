@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.relx.banking.customerservice.dto.BulkCustomerSaveResponse;
 import com.relx.banking.customerservice.dto.CustomerAddressDto;
 import com.relx.banking.customerservice.dto.CustomerRequestDto;
 import com.relx.banking.customerservice.dto.CustomerResponseDto;
@@ -20,7 +21,7 @@ public interface ICustomerService {
 	
 	List<String> createBulkNewCustomer(List<CustomerRequestDto> customerReqDto);
 
-	List<String> importAndCreateNewCustomer(MultipartFile custDetailsFile);
+	BulkCustomerSaveResponse importAndCreateNewCustomer(MultipartFile custDetailsFile);
 
 	CustomerResponseDto getCustomerDetails(String cifNo);
 	

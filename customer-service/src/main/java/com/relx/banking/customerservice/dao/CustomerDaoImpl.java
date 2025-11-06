@@ -13,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.relx.banking.customerservice.dto.CustomerResponseDto;
 import com.relx.banking.customerservice.entity.Address;
 import com.relx.banking.customerservice.entity.Customer;
 import com.relx.banking.customerservice.enums.AddressType;
@@ -22,8 +21,6 @@ import com.relx.banking.customerservice.repository.CustomerRepository;
 import com.relx.banking.customerservice.util.CustomerConstant;
 
 import jakarta.persistence.EntityNotFoundException;
-
-import com.relx.banking.customerservice.util.CustomerConstant;
 
 /**
  * @author Naveen.Sankhala
@@ -55,6 +52,11 @@ public class CustomerDaoImpl implements ICustomerDao {
 		return customerRepository.findByAadharNumberAndPanNumber( aadharNumber, panNumber);
 	}
 
+	@Override
+	public List<Customer> findByAadharAndPanIn(List<String> aadharNumbers, List<String> panNumbers) {
+		return customerRepository.findByAadharAndPanIn(aadharNumbers, panNumbers);
+	}
+	
 	@Override
 	public Customer getCustomerDetails(String custIdentificationNo, String status) {
 		return customerRepository.findByCustomerIdentificationNoAndStatus(custIdentificationNo,status)
@@ -102,4 +104,5 @@ public class CustomerDaoImpl implements ICustomerDao {
 		response.put(CustomerConstant.HASPREVIOUS,pageCustomer.hasPrevious());
 		return response;
 	}
+
 }

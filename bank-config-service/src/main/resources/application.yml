@@ -3,10 +3,10 @@ server:
  servlet:
   context-path: /config
 
-eureka:
- client:
-  service-url:
-   defaultZone: http://localhost:9001/eureka/
+#eureka:
+# client:
+#  service-url:
+#   defaultZone: http://localhost:9001/eureka/
  
 spring:
  application:
@@ -19,5 +19,9 @@ spring:
 #    jwt:
 #     issuer-uri: http://localhost:9003  # same as auth-service
 # 
+ rabbitmq:
+  listener:
+   simple:
+    auto-startup: false   # prevents listener from starting too early
 
 

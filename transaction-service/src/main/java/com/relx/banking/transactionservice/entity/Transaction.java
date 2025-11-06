@@ -1,4 +1,4 @@
-package com.relx.banking.accountservice.entity;
+package com.relx.banking.transactionservice.entity;
 
 import java.io.Serializable;
 

@@ -4,11 +4,16 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.relx.banking.commondto.CastDto;
 import com.relx.banking.commondto.CityDto;
+import com.relx.banking.commondto.CustomerConstitutionDto;
 import com.relx.banking.commondto.GenderTitleDto;
 import com.relx.banking.commondto.MasCurrencyDto;
+import com.relx.banking.commondto.OccupationDto;
 import com.relx.banking.commondto.RelationDto;
+import com.relx.banking.commondto.ReligionDto;
 import com.relx.banking.commondto.StateDto;
+
 
 /**
  * @author Naveen.Sankhala
@@ -23,6 +28,8 @@ public interface IMasterService {
 	List<CityDto> getAllCity(Long stateId);
 
 	MasCurrencyDto getCurrency(Long countryId);
+	
+	List<MasCurrencyDto> getMasCurrency();
 
 	List<GenderTitleDto> getGenderTitle();
 
@@ -30,12 +37,12 @@ public interface IMasterService {
 
 	Object getMasStatus(String statusCode, String statusTable);
 
-	Object getMasOccupation();
+	List<OccupationDto> getMasOccupation();
 
-	Object getMasReligion();
+	List<ReligionDto> getMasReligion();
 
-	Object getMasCast();
+	List<CastDto> getMasCast();
 
-	Object getMasCustomerConstitution();
+	List<CustomerConstitutionDto> getMasCustomerConstitution();
 
 }

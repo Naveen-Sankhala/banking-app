@@ -1,4 +1,4 @@
-package com.relx.banking.customerservice.util;
+package com.relx.banking.customerservice.util.exceptionhandling;
 
 /**
  * @author Naveen.Sankhala

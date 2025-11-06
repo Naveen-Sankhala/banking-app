@@ -2,9 +2,6 @@ package com.relx.banking.customerservice.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,6 +17,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -30,7 +28,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "CUSTOMER_DETAILS")
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
-public class CustomerDetails implements Serializable {
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+public class CustomerDetails extends AuditableEntity implements Serializable {
 	
 	private static final long serialVersionUID = 2082864051945784426L;
 
@@ -39,9 +38,6 @@ public class CustomerDetails implements Serializable {
 	@Column(name ="Customer_Details_Id")
 	private Long customerDetailsId;
 	
-//    @Column(name = "Customer_Id")
-//    private Long customerId;
-
     @Column(name = "Branch_Id")
     private Long branchId;
 
@@ -69,10 +65,10 @@ public class CustomerDetails implements Serializable {
     @Column(name = "Caste_Id")
     private Long casteId;
 
-    @Column(name = "Husband_Father_Title", length = 50)
+    @Column(name = "Husband_Father_Title")
     private String husbandFatherTitle;
 
-    @Column(name = "Husband_Father_Name", length = 150)
+    @Column(name = "Husband_Father_Name")
     private String husbandFatherName;
 
     @Column(name = "Relation_Type")
@@ -121,7 +117,7 @@ public class CustomerDetails implements Serializable {
     private LocalDate passportExpiryDate;
 
     @Column(name = "Currency_Id")
-    private Long Currency_Id;
+    private Long currencyId;
     
     @Column(name = "Membership_Number")
     private String membershipNumber;
@@ -135,20 +131,6 @@ public class CustomerDetails implements Serializable {
     @Column(name = "Customer_Group")
     private String customerGroup;
 
-    @Column(name="Created_By")
-	private Long createdBy;
-
-	@CreationTimestamp
-	@Column(name="Created_Date")
-	private LocalDateTime createdDate;
-	
-	@Column(name="Last_Chg_By")
-	private Long lastChgBy;
-	
-	@UpdateTimestamp
-	@Column(name="Last_Chg_Date")
-	private LocalDateTime lastChgDate;
-	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="Customer_Id",referencedColumnName ="Customer_Id")
 	@JsonIgnore

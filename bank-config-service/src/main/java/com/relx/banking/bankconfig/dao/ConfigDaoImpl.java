@@ -2,6 +2,8 @@ package com.relx.banking.bankconfig.dao;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,20 +44,23 @@ public class ConfigDaoImpl implements IConfigDao {
 	 }
 
 	@Override
-	public Object getBranchDetails(Long branchId, String status) {
+	public Branch getBranchDetails(Long branchId, String status) {
 		return branchRepo.findByBranchIdAndStatus(branchId, status)
 				 .orElseThrow(() -> new IllegalStateException("No Branch Details Found"));
 	}
 
 	@Override
-	public Object getBranchDetails(String branchCode, String status) {
+	public Branch getBranchDetails(String branchCode, String status) {
 		return branchRepo.findByBranchCodeAndStatus(branchCode, status)
 				 .orElseThrow(() -> new IllegalStateException("No Branch Details Found"));
 	}
 	
 	@Override
 	public List<Branch> getBranchDetailsByZoneId(Long zrId, String status) {
-		return branchRepo.findByZrIdAndStatus(zrId, status);
+		return branchRepo.findByZrIdAndStatus(zrId, status)
+				.stream()
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
 
 	}
 

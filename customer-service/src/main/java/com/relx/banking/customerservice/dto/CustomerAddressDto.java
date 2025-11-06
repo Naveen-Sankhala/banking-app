@@ -1,8 +1,6 @@
 package com.relx.banking.customerservice.dto;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.List;
 
 import com.relx.banking.customerservice.enums.AddressType;
 

@@ -7,16 +7,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.relx.banking.bankconfig.dao.IMasterDao;
+import com.relx.banking.bankconfig.entity.MasCast;
 import com.relx.banking.bankconfig.entity.MasCity;
 import com.relx.banking.bankconfig.entity.MasCurrency;
+import com.relx.banking.bankconfig.entity.MasCustomerConstitution;
 import com.relx.banking.bankconfig.entity.MasGenderTitle;
+import com.relx.banking.bankconfig.entity.MasOccupation;
 import com.relx.banking.bankconfig.entity.MasRelation;
+import com.relx.banking.bankconfig.entity.MasReligion;
 import com.relx.banking.bankconfig.entity.MasState;
 import com.relx.banking.bankconfig.util.ObjectMapperUtils;
+import com.relx.banking.commondto.CastDto;
 import com.relx.banking.commondto.CityDto;
+import com.relx.banking.commondto.CustomerConstitutionDto;
 import com.relx.banking.commondto.GenderTitleDto;
 import com.relx.banking.commondto.MasCurrencyDto;
+import com.relx.banking.commondto.OccupationDto;
 import com.relx.banking.commondto.RelationDto;
+import com.relx.banking.commondto.ReligionDto;
 import com.relx.banking.commondto.StateDto;
 
 import lombok.RequiredArgsConstructor;
@@ -50,6 +58,12 @@ public class MasterServiceImpl implements IMasterService {
 		MasCurrency currency= iMasterDao.getCurrency(countryId);
 		return ObjectMapperUtils.map(currency, MasCurrencyDto.class);
 	}
+	
+	@Override
+	public List<MasCurrencyDto> getMasCurrency() {
+		List<MasCurrency> currencyList= iMasterDao.getCurrency();
+		return ObjectMapperUtils.mapAll(currencyList, MasCurrencyDto.class);
+	}
 
 	@Override
 	public List<GenderTitleDto> getGenderTitle() {
@@ -64,23 +78,27 @@ public class MasterServiceImpl implements IMasterService {
 	}
 
 	@Override
-	public Object getMasOccupation() {
-		return iMasterDao.getMasOccupation();
+	public List<OccupationDto> getMasOccupation() {
+		List<MasOccupation> masOccupation = iMasterDao.getMasOccupation();
+		return ObjectMapperUtils.mapAll(masOccupation, OccupationDto.class);
 	}
 	
 	@Override
-	public Object getMasReligion() {
-		return iMasterDao.getMasReligion();
+	public List<ReligionDto> getMasReligion() {
+		List<MasReligion> masReligion = iMasterDao.getMasReligion();
+		return ObjectMapperUtils.mapAll(masReligion, ReligionDto.class);
 	}
 	
 	@Override
-	public Object getMasCast() {
-		return iMasterDao.getMasCast();
+	public List<CastDto> getMasCast() {
+		List<MasCast> masCast =iMasterDao.getMasCast();
+		return ObjectMapperUtils.mapAll(masCast, CastDto.class);
 	}
 	
 	@Override
-	public Object getMasCustomerConstitution() {
-		return iMasterDao.getMasCustomerConstitution();
+	public List<CustomerConstitutionDto> getMasCustomerConstitution() {
+		List<MasCustomerConstitution> masCustCont =  iMasterDao.getMasCustomerConstitution();
+		return ObjectMapperUtils.mapAll(masCustCont, CustomerConstitutionDto.class);
 	}
 	
 	@Override

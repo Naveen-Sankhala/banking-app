@@ -41,10 +41,10 @@ public class MasCast implements Serializable {
 	private String castCode;
 
 	@Column(name = "Cast_Type")
-	private BigDecimal castType;
+	private String castType;
 
 	@Column(name = "Status")
-	private BigDecimal status;
+	private String status;
 
 	@Column(name="Created_By")
 	private Long createdBy;

@@ -24,12 +24,12 @@ public class BankConfigurationDto implements Serializable{
 	private Long countryId;
 	private Long currencyId;
 	private String allowMultipleCurrency;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate bankDate;
 	private String dayEndProcess;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate financialYearStart;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate financialYearEnd;
 	private String auditTrailRequired;
 	private String auditOption;
@@ -38,6 +38,6 @@ public class BankConfigurationDto implements Serializable{
 	private String ecsBankCode;
 	private String sameLoanAccountYn;
 	private String clientCode;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createdDate;
 }

@@ -3,14 +3,15 @@ package com.relx.banking.bankconfig.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.relx.banking.bankconfig.dao.IConfigDao;
-import com.relx.banking.bankconfig.dto.ConfigChangedEvent;
 import com.relx.banking.bankconfig.entity.BankConfiguration;
+import com.relx.banking.bankconfig.entity.Branch;
 import com.relx.banking.bankconfig.util.ObjectMapperUtils;
 import com.relx.banking.commondto.BankConfigurationDto;
+import com.relx.banking.commonrecord.BranchDetailsRecord;
+import com.relx.banking.eventchanged.ConfigChangedEvent;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,20 +40,23 @@ public class ConfigServiceImpl implements IConfigService {
         // Publish event
         rabbitTemplate.convertAndSend(
             "bank.config.exchange", "config.update",
-            new ConfigChangedEvent("bankConfig", saved)
+            new ConfigChangedEvent("BankConfig", saved)
         );
+        logger.info("✅ Sent ConfigChangedEvent: " + "BankConfig");
         return saved;
     }
 
 	@Override
-	public Object getBranchDetails(Long branchId) {
-		
-		return iConfigDao.getBranchDetails(branchId,"Y");
+	public BranchDetailsRecord getBranchDetails(Long branchId) {
+		Branch branch =	iConfigDao.getBranchDetails(branchId,"Active");
+		return ObjectMapperUtils.map(branch, BranchDetailsRecord.class);
+
 	}
 
 	@Override
-	public Object getBranchDetails(String branchCode) {
-		
-		return iConfigDao.getBranchDetails(branchCode,"Y");
+	public BranchDetailsRecord getBranchDetails(String branchCode) {
+
+		Branch branch =	iConfigDao.getBranchDetails(branchCode,"Active");
+		return ObjectMapperUtils.map(branch, BranchDetailsRecord.class);
 	}
 }

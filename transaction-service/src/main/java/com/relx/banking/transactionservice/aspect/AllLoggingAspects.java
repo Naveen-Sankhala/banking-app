@@ -1,4 +1,4 @@
-package com.relx.banking.accountservice.aspect;
+package com.relx.banking.transactionservice.aspect;
 
 import java.util.Arrays;
 

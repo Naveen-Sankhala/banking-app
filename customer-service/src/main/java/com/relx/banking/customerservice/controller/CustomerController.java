@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.relx.banking.customerservice.dto.BulkCustomerSaveResponse;
 import com.relx.banking.customerservice.dto.CustomerRequestDto;
-import com.relx.banking.customerservice.dto.CustomerResponseDto;
 import com.relx.banking.customerservice.service.ICustomerService;
 import com.relx.banking.customerservice.util.exceptionhandling.ApiResponse;
 
@@ -76,9 +76,9 @@ public class CustomerController {
 	
 	@PostMapping(value ="import" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<?> importAndCreateNewCustomer(@RequestParam("cust-detail-file") MultipartFile custDetailsFile) throws Exception{
-		List<String> cifNo = iCustomerService.importAndCreateNewCustomer(custDetailsFile);
-		if(cifNo !=null)
-			return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true,String.format("Customer create successfuly , CIF ID :: "+cifNo)));
+		BulkCustomerSaveResponse response = iCustomerService.importAndCreateNewCustomer(custDetailsFile);
+		if(response !=null)
+			return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true,String.format("Customer create successfuly , CIF ID :: ")));
 		else
 			return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(false,messageSource.getMessage("4", null,LocaleContextHolder.getLocale())));
 	}

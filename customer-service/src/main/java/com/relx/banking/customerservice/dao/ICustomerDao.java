@@ -22,6 +22,8 @@ public interface ICustomerDao {
 	Customer saveCustomer(Customer customer);
 
 	Customer findCustomerByAadharAndPanNo(String aadharNumber,String panNumber);
+	
+	List<Customer> findByAadharAndPanIn(List<String> aadharNumbers, List<String> panNumbers); //batch query
 
 	Customer getCustomerDetails(String custIdentificationNo, String status);
 	

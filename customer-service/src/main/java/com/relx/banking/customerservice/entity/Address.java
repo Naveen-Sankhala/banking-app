@@ -38,10 +38,7 @@ public class Address implements Serializable {
 	@Column(name="Address_Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long addressId;
-	
-//	@Column(name="Cust_Id")
-//	private String customerId;
-	
+		
 	@Column(name="Address_Type")
 	@Enumerated(EnumType.STRING)
 	private AddressType addressType;

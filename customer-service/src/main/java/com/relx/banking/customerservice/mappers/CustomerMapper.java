@@ -31,7 +31,7 @@ public interface CustomerMapper {
 	@Mapping(source = "alternateContactNo",target="alternateContactNo") 
 	@Mapping(source = "emailId",target="emailId")    
 	@Mapping(source = "status",target="status") 
-	@Mapping(source = "createdBy",target="createdBy") 
-	@Mapping(source = "lastChgBy",target="lastChgBy") 
+//	@Mapping(source = "createdBy",target="createdBy") 
+//	@Mapping(source = "lastChgBy",target="lastChgBy") 
     Customer customerDTOToCustomer(CustomerRequestDto custReqDto);
 }

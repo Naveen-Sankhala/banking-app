@@ -2,7 +2,6 @@ package com.relx.banking.accountservice.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.relx.banking.accountservice.client.BankConfigApi;
 import com.relx.banking.accountservice.client.CustomerClient;
 import com.relx.banking.accountservice.dao.IAccountDao;
 import com.relx.banking.accountservice.dto.AccountRequestDto;
@@ -20,7 +20,6 @@ import com.relx.banking.accountservice.dto.CustomerDto;
 import com.relx.banking.accountservice.entity.Account;
 import com.relx.banking.accountservice.entity.AccountCategories;
 import com.relx.banking.accountservice.entity.AccountInformation;
-import com.relx.banking.accountservice.entity.Branch;
 import com.relx.banking.accountservice.entity.JointAccountHolder;
 import com.relx.banking.accountservice.mappers.AccountInformationMapper;
 import com.relx.banking.accountservice.mappers.AccountMapper;
@@ -28,6 +27,7 @@ import com.relx.banking.accountservice.util.ObjectMapperUtils;
 import com.relx.banking.accountservice.util.exceptionhandling.AccountAlreadyExistsException;
 import com.relx.banking.accountservice.util.exceptionhandling.InvalidCustomerException;
 import com.relx.banking.accountservice.util.exceptionhandling.NotFoundException;
+import com.relx.banking.commonrecord.BranchDetailsRecord;
 
 /**
  * @author Naveen Sankhala
@@ -41,6 +41,9 @@ public class AccountServiceImpl implements IAccountService {
 	
 	@Autowired 
 	private CustomerClient customerClient;
+	
+	@Autowired
+	private BankConfigApi bankConfigApi;
 	
 	@Override
 	public AccountResponseDto createNewAccount(AccountRequestDto accReqDto) {
@@ -57,14 +60,14 @@ public class AccountServiceImpl implements IAccountService {
 	    if(_accNo !=null && _accNo.getAccountType().equals(accReqDto.getAccountType()))
 	    	throw new AccountAlreadyExistsException("Customer already has an account of type: " + accReqDto.getAccountType());
 	    
-	    Branch branch = iAccountDao.getBranchInfo(accReqDto.getBranchCode());
+	    BranchDetailsRecord branch = bankConfigApi.getBranchDetails(null,accReqDto.getBranchCode());
 	    
-	    if(!branch.getIsBranchOpen().equalsIgnoreCase("OPEN"))
+	    if(!branch.isBranchOpen().equalsIgnoreCase("OPEN"))
 	    	throw new NotFoundException("This Branch not Open :: "+accReqDto.getBranchCode());
 	    
 	    AccountCategories accCatId =iAccountDao.getAccountCatgoryByShortName(accReqDto.getAccountType());
 	     
-	    String new_accNo = iAccountDao.generateAccountNumber(branch.getBranchId(), accCatId.getAccCatId());
+	    String new_accNo = iAccountDao.generateAccountNumber(branch.branchId(), accCatId.getAccCatId());
 	    
 	    logger.info("\nNew Generated Account No is: "+ new_accNo);
 	    accReqDto.setBalance(
@@ -80,7 +83,7 @@ public class AccountServiceImpl implements IAccountService {
 	    
 	    Account account =AccountMapper.INSTANCE.accountDtoToAccount(accReqDto);
 	    account.setCustomerId(customer.customerId());
-	    account.setBranchId(branch.getBranchId());
+	    account.setBranchId(branch.branchId());
 	    account.setAccountNumber(new_accNo);
 	    
 	    AccountInformation accInfo = AccountInformationMapper.INSTANCE.accInfoDtoToAccountInformation(accReqDto.getAccInformation());
@@ -144,10 +147,10 @@ public class AccountServiceImpl implements IAccountService {
 	public AccountResponseDto getAccountDetails(Long accountId) {
 		Account account = iAccountDao.getAccountInfoByAccountId(accountId, "Active");
 		CustomerDto customer = customerClient.getCustomerDetails(account.getCustomerId());
-		Branch branch = iAccountDao.getBranchInfo(account.getBranchId());
+		BranchDetailsRecord branch = bankConfigApi.getBranchDetails(account.getBranchId(),null);
 		AccountResponseDto accResDto = ObjectMapperUtils.map(account, AccountResponseDto.class);
 		accResDto.setCifNo(customer.cifNo());
-		accResDto.setBranchCode(branch.getBranchCode());
+		accResDto.setBranchCode(branch.branchCode());
 		accResDto.getAccountInfo().setAccountId(accountId);
 		return accResDto;
 	}

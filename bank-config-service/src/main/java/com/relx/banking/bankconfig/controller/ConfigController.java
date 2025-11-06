@@ -48,18 +48,18 @@ public class ConfigController {
 //        return ResponseEntity.ok("Accounts for user: " + username + "Requested by: " + subject + " scopes: " + scopes);
 //	}
 	 
+	@GetMapping("")
+    public ResponseEntity<?> getAllCommonConfiguration() {
+		return ResponseEntity.status(HttpStatus.OK).body(configInitializer.getAllCommonConfiguration());
+    }
+	
 	@GetMapping("bank-config")
 	public ResponseEntity<?> getCurrentBalanceOfAccount()throws Exception{
 		return ResponseEntity.status(HttpStatus.OK).body(iConfigService.getBankConfiguration());
 	}
 	
-	@GetMapping("")
-    public ResponseEntity<?> getAllCommonConfiguration() {
-		return ResponseEntity.status(HttpStatus.OK).body(configInitializer.getAllCommonConfiguration());
-    }
-
     @GetMapping("/{key}")
-    public ResponseEntity<Object> getConfig(@PathVariable String key) {
+    public ResponseEntity<Object> getConfigByKey(@PathVariable String key) {
         Object value = configInitializer.getConfig(key);
         if(value !=null)
 			return ResponseEntity.status(HttpStatus.OK).body(value);

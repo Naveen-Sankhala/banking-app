@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.relx.banking.accountservice.entity.Account;
 import com.relx.banking.accountservice.entity.AccountCategories;
-import com.relx.banking.accountservice.entity.Branch;
 
 /**
  * @author Naveen.Sankhala
@@ -37,12 +36,6 @@ public interface IAccountDao {
 	AccountCategories getAccountCatgoryByShortName(String accCatSName);
 
 	AccountCategories getAccountCatgory(String accCatName);
-
-	Branch getBranchInfo(Long branchId);
-
-	Branch getBranchInfo(String branchCode);
-
-	List<Branch> getBranchInfoByZoneRegion(Long zrId);
 
 	Map<String, Object> getAllAccounts(int page, int size);
 

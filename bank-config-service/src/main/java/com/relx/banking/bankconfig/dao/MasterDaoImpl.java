@@ -91,6 +91,11 @@ public class MasterDaoImpl implements IMasterDao {
 		return masCurrencyRepo.findByCountryId(countryId)
 				.orElseThrow(() -> new NotFoundException("No Currency Details Found :::"));
 	}
+	
+	@Override
+	public List<MasCurrency> getCurrency() {
+		return masCurrencyRepo.findAll();
+	}
 
 	@Override
 	public List<MasGenderTitle> getGenderTitle() {

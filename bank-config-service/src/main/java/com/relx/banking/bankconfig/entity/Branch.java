@@ -1,6 +1,7 @@
 package com.relx.banking.bankconfig.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -56,10 +57,10 @@ public class Branch implements Serializable {
 	private String addressLine2;
 	
 	@Column(name = "City_Id")
-	private String cityId;
+	private Integer cityId;
 	
 	@Column(name = "State_Id")
-	private String stateId;
+	private Integer stateId;
 	
 	@Column(name = "Zipcode")
 	private String zipCode;
@@ -80,16 +81,16 @@ public class Branch implements Serializable {
 	private String branchType;
 	
 	@Column(name = "Manager_Id")
-	private String ManagerId;
+	private Integer ManagerId;
 	
 	@Column(name = "Is_Branch_Open")
 	private String isBranchOpen;
 	
 	@Column(name = "Opening_Date")
-	private String openingDate;
+	private LocalDate openingDate;
 	
 	@Column(name = "Closing_Date")
-	private String closingDate;
+	private LocalDate closingDate;
 	
 	@Column(name = "Max_Cash_Limit")
 	private String maxCashLimit;

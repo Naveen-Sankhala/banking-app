@@ -21,10 +21,20 @@ public enum GenderEnum {
 		return this.gender;
 	}
 
+	
 	@JsonCreator
 	public static GenderEnum fromString(String value) {
 		if (value == null) 
 			return null;
-		return GenderEnum.valueOf(value.toUpperCase());
+		
+		String normalized = value.trim().toUpperCase();
+	    for (GenderEnum gender : GenderEnum.values()) {
+	        if (gender.name().equalsIgnoreCase(normalized) || gender.getGender().equalsIgnoreCase(normalized)) {
+	        	 System.out.println("Find gender : " + gender);
+	        	return gender;
+	        }
+	    }
+	    System.err.println("Unknown gender : " + value);
+	    return null;
 	}
 }

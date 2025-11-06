@@ -22,9 +22,6 @@ public class CustomerRequestDto implements Serializable {
 	private String firstName;
 	private String middleName;
 	private String lastName;
-	private String relation;
-	private String fatherName;
-	private String motherName;
 	private String cifNo;
 	private String gender;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
@@ -38,7 +35,6 @@ public class CustomerRequestDto implements Serializable {
 	private String alternateContactNo;
 	private String emailId;
 	private String status;
-	private String occupation;
 	//private String nicNo
 	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	//private LocalDate nicIssueDt

@@ -42,7 +42,7 @@ public class MasReligion implements Serializable {
 	private String rlgnCode;
 
 	@Column(name = "Status")
-	private BigDecimal status;
+	private String status;
 
 	@Column(name="Created_By")
 	private Long createdBy;

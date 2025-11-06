@@ -1,6 +1,7 @@
 package com.relx.banking.customerservice.client;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import com.relx.banking.commondto.GenderTitleDto;
 import com.relx.banking.commondto.MasCurrencyDto;
 import com.relx.banking.commondto.RelationDto;
 import com.relx.banking.commondto.StateDto;
+import com.relx.banking.commonrecord.BranchDetailsRecord;
 import com.relx.banking.customerservice.dto.JointAccountDto;
 
 /**
@@ -24,9 +26,15 @@ import com.relx.banking.customerservice.dto.JointAccountDto;
 
 @FeignClient(name = "bank-config-service", url = "${config-service.url}")
 public interface BankConfigApi {
+	
+	@GetMapping("")
+	Map<String, Object> getAllCommonConfiguration();
+	
+	@GetMapping("/{key}")
+	Object getConfigByKey(@PathVariable String key);
 
 	@GetMapping("/branch")
-    BranchDetailsDto getBranchDetails(@RequestParam("branch-id") Long branchId,
+	BranchDetailsRecord getBranchDetails(@RequestParam("branch-id") Long branchId,
     		@RequestParam("branch-code") String branchCode);
 	
 	@GetMapping("currency/{country-id}")
@@ -38,6 +46,9 @@ public interface BankConfigApi {
 	@GetMapping("city/{state-id}")
 	List<CityDto> getAllCity(@PathVariable("state-id") Long stateId);
 	
+	@GetMapping("config/")
+	String getCityNameAndStateNameDetails(@RequestParam("state-name") String stateName,@RequestParam("city-name") String cityName);
+	
 	@GetMapping("gender-title")
 	List<GenderTitleDto> getGenderTitle();
 	
@@ -46,5 +57,6 @@ public interface BankConfigApi {
 	
 	@GetMapping("status/{status-code}/{status-table}")
     StateDto getMasStatus(@PathVariable("status-code") String statusCode,@PathVariable("status-table") String statusTable);
+
 	
 }

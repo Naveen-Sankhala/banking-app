@@ -5,8 +5,6 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import jakarta.persistence.Column;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,6 +39,8 @@ public class CustomerDetailsDto implements Serializable {
 	private String educationQual;
 	private Integer numDependents;
 	private String guardianType;
+	private String categoryCode;
+	private String introductionType;
 	private String checksumValue;
 	private String nationalIdNumber;
 	private String passportNumber;
@@ -49,7 +49,7 @@ public class CustomerDetailsDto implements Serializable {
 	private LocalDate passportIssueDate;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate passportExpiryDate;
-	private Long Currency_Id;
+	private Long currencyId;
 	private String membershipNumber;
 	private String employeeNumber;
 	private String accountManager;

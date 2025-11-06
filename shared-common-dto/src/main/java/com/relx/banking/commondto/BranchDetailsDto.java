@@ -1,6 +1,9 @@
 package com.relx.banking.commondto;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,18 +26,20 @@ public class BranchDetailsDto implements Serializable{
 	private String chkClearingCode;
 	private String addressLine1;
 	private String addressLine2;
-	private String cityId;
-	private String stateId;
+	private Integer cityId;
+	private Integer stateId;
 	private String zipCode;
-	private String countryId;
+	private Integer countryId;
 	private String phoneNumber;
 	private String email;
 	private String status;
 	private String branchType;
-	private String ManagerId;
+	private Integer ManagerId;
 	private String isBranchOpen;
-	private String openingDate;
-	private String closingDate;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	private LocalDate openingDate;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	private LocalDate closingDate;
 	private String maxCashLimit;
 	private String gstNo;
 	private String gstRegName;

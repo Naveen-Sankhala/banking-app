@@ -28,15 +28,3 @@ public interface AddressMapper {
 	Address customerAddressDTOToCustomerAddress(CustomerAddressDto addressDto);
 	
 }
-
-
-//@Mapping(source = "customer.address.countryId",target="countryId")
-//customer.address.
-//customer.address.
-//customer.address.
-//customer.address.
-//customer.address.
-//customer.address.
-//customer.address.
-//customer.address.
-//customer.address.

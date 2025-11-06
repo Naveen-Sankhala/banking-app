@@ -18,9 +18,9 @@ public interface IConfigDao {
 	
 	BankConfiguration getBankConfiguration();
 
-	Object getBranchDetails(Long branchId, String status);
+	Branch getBranchDetails(Long branchId, String status);
 
-	Object getBranchDetails(String branchCode, String status);
+	Branch getBranchDetails(String branchCode, String status);
 
 	List<Branch> getBranchDetailsByZoneId(Long zrId, String status);
 

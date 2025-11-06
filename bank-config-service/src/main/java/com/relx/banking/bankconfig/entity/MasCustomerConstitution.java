@@ -53,10 +53,10 @@ public class MasCustomerConstitution implements Serializable {
     private String conRiskType;
 
     @Column(name = "Con_Isteller")
-    private BigDecimal conIsTeller;
+    private Character conIsTeller;
     
     @Column(name = "Con_Iscii")
-    private BigDecimal conIsCII;
+    private Character conIsCII;
     
     @Column(name = "Con_Lang1")
     private String conLang1;

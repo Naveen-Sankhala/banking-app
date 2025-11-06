@@ -28,6 +28,8 @@ public interface IMasterDao {
 	List<MasCity> getAllCity(Long stateId);
 
 	MasCurrency getCurrency(Long countryId);
+	
+	List<MasCurrency> getCurrency();
 
 	List<MasGenderTitle> getGenderTitle();
 
@@ -42,5 +44,7 @@ public interface IMasterDao {
 	List<MasCast> getMasCast();
 
 	List<MasCustomerConstitution> getMasCustomerConstitution();
+
+	
 
 }

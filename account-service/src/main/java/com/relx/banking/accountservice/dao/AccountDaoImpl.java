@@ -17,10 +17,8 @@ import com.relx.banking.accountservice.dto.AccountSummary;
 import com.relx.banking.accountservice.dto.AccountSummaryDto;
 import com.relx.banking.accountservice.entity.Account;
 import com.relx.banking.accountservice.entity.AccountCategories;
-import com.relx.banking.accountservice.entity.Branch;
 import com.relx.banking.accountservice.repository.AccountCategoriesRepository;
 import com.relx.banking.accountservice.repository.AccountRepository;
-import com.relx.banking.accountservice.repository.BranchRepository;
 import com.relx.banking.accountservice.util.AccountConstant;
 import com.relx.banking.accountservice.util.exceptionhandling.NotFoundException;
 
@@ -36,9 +34,6 @@ public class AccountDaoImpl implements IAccountDao {
 
 	@Autowired
 	private AccountCategoriesRepository accCatRepository;
-
-	@Autowired
-	private BranchRepository branchRepository;
 
 	@Override
 	public Account saveAccount(Account account) {
@@ -100,26 +95,6 @@ public class AccountDaoImpl implements IAccountDao {
 		return accCatRepository.findByAccCatNameAndStatus(accCatName,"ACTIVE")
 				.orElseThrow(()-> new NotFoundException("No Account Category Found :::"));
 	}
-
-	@Override
-	public Branch getBranchInfo(Long branchId) {
-		return branchRepository.findByBranchIdAndStatus(branchId,"ACTIVE")
-				.orElseThrow(()-> new NotFoundException("No Account Category Found :::"));
-	}
-	@Override
-	public Branch getBranchInfo(String branchCode) {
-		return branchRepository.findByBranchCodeAndStatus(branchCode,"ACTIVE")
-				.orElseThrow(()-> new NotFoundException("No Account Category Found :::"));
-	}
-
-	@Override
-	public List<Branch> getBranchInfoByZoneRegion(Long zrId) {
-		return branchRepository.findByZrIdAndStatus(zrId,"ACTIVE")
-				.stream()
-				.filter(Objects::nonNull)
-				.collect(Collectors.toList());
-	}
-	
 
 	@Override
 	public Map<String, Object> getAllAccounts(int page, int size) {
