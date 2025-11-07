@@ -72,6 +72,16 @@ public interface AccountRepository extends JpaRepository<Account, Long>{
     
     @Query("SELECT a FROM Account a JOIN a.accountInfo i JOIN a.jointHolders h")
     Page<AccountSummary> findAllSummaries(Pageable pageable);
+    
+    @Query("""
+            SELECT  a.accountId AS accountId,
+                a.balance AS balance,
+                i.accInfoName AS accInfoName,
+                i.nameTitle AS nameTitle
+            FROM Account a
+            JOIN a.accountInfo i
+        """)
+        Page<AccountSummaryDto> findAllSummariesPartial(Pageable pageable);
 
 	
 }

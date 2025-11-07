@@ -92,10 +92,10 @@ public class AccountController {
 		return ResponseEntity.status(HttpStatus.OK).body(iAccountService.updateAccountMetaData(accountId));
 	}
 	
-	@GetMapping
+	@GetMapping("/all")
     public ResponseEntity<?> getAccounts(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
 
-		return ResponseEntity.ok( iAccountService.getAllAccounts(page, size));
+		return ResponseEntity.status(HttpStatus.OK).body( iAccountService.getAllAccounts(page, size));
 	}
 }

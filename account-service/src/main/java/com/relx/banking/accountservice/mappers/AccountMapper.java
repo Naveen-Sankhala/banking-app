@@ -29,5 +29,3 @@ public interface AccountMapper {
 	@Mapping(source = "isChqYN",target="isChqYN")    
 	Account accountDtoToAccount(AccountRequestDto accReqDto);
 }
-
-//@Mapping(target = "gender", expression = "java(com.relx.banking.customerservice.enums.GenderEnum.fromString(custReqDto.getGender()))")

@@ -9,11 +9,11 @@ eureka:
    defaultZone: http://localhost:9001/eureka/
 
 spring:   
- security:
-  oauth2:
-   resourceserver:
-    jwt:
-     issuer-uri: http://localhost:9003  # auth-server issuer
+# security:
+#  oauth2:
+#   resourceserver:
+#    jwt:
+#     issuer-uri: http://localhost:9003  # auth-server issuer
    
 
  application:
@@ -29,14 +29,34 @@ spring:
        - Path=/config/**
       filters:
        - PreserveHostHeader=true
+       - AddRequestHeader=X-Source, api-gateway
     - id: customer-service
       uri: lb://CUSTOMER-SERVICE
       predicates:
        - Path=/Customer/**
       filters:
        - PreserveHostHeader=true
+       - AddRequestHeader=X-Source, api-gateway
     - id: account-service
       uri: lb://ACCOUNT-SERVICE
       predicates:
        - Path=/Account/**
+      filters:
+       - PreserveHostHeader=true
+       - AddRequestHeader=X-Source, api-gateway
+       
+# ===============================
+# Acutator -log Info
+# ===============================
+management:
+ endpoints:
+  web:
+   base-path: /sysAdmin
+   exposure:
+    include: health,info,logfile,beans,heapdump
+ endpoint:
+  gateway:
+   enabled: true
+  health:
+   show-details: always
 

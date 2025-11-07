@@ -21,4 +21,19 @@ spring:
      uri: https://github.com/Naveen-Sankhala/banking-app.git #https://github.com/your-org/bank-config-repo
      search-paths: config-properties/dev
      default-label: main
+     
+# ===============================
+# Acutator -log Info
+# ===============================
+management:
+ endpoints:
+  web:
+   base-path: /sysAdmin
+   exposure:
+    include: health,info,logfile,beans,heapdump
+ endpoint:
+  gateway:
+   enabled: true
+  health:
+   show-details: always
  

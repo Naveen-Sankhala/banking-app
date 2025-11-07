@@ -84,7 +84,10 @@ public class ConfigListener {
 			}else {
 				logger.info("✅ Skipping API call — configs already received from MQ.");
 			}
-		} catch (Exception e) {
+		}catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            logger.error("🛑 Startup wait interrupted", e);
+        } catch (Exception e) {
 			logger.error("❌ Failed to fetch initial configuration", e);
 		}
 	}

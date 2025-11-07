@@ -13,3 +13,18 @@ eureka:
     fetch-registry: false        # server doesn\u2019t fetch registry
   server:
     wait-time-in-ms-when-sync-empty: 0
+    
+# ===============================
+# Acutator -log Info
+# ===============================
+management:
+ endpoints:
+  web:
+   base-path: /sysAdmin
+   exposure:
+    include: health,info,logfile,beans,heapdump
+ endpoint:
+  gateway:
+   enabled: true
+  health:
+   show-details: always

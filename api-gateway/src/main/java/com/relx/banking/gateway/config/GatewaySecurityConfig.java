@@ -2,18 +2,18 @@ package com.relx.banking.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.web.server.SecurityWebFilterChain;
+//import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+//import org.springframework.security.config.web.server.ServerHttpSecurity;
+//import org.springframework.security.web.server.SecurityWebFilterChain;
 
 /**
  * @author Naveen.Sankhala
  * Sep 25, 2025
  */
 @Configuration
-@EnableWebFluxSecurity
+//@EnableWebFluxSecurity
 public class GatewaySecurityConfig {
-
+/*
 	@Bean
 	public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
 		http
@@ -24,5 +24,5 @@ public class GatewaySecurityConfig {
         .oauth2ResourceServer(oauth2 -> oauth2.jwt());
     return http.build();
 	}
-
+*/
 }

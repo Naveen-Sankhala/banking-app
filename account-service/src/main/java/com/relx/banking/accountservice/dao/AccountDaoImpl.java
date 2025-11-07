@@ -100,8 +100,7 @@ public class AccountDaoImpl implements IAccountDao {
 	public Map<String, Object> getAllAccounts(int page, int size) {
 		Map<String, Object> response = new HashMap<>();
 
-		//List<Customer> customer = new ArrayList<Customer>();
-		Pageable paging = PageRequest.of(page, size, Sort.by("Account_Number"));
+		Pageable paging = PageRequest.of(page, size, Sort.by("accountNumber"));
 
 		Page<AccountSummary> accountSummaryDto = accountRepository.findAllSummaries(paging);
 
