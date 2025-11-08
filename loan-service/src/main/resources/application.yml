@@ -1,0 +1,10 @@
+spring:
+ application.name: loan-service
+ profiles:
+  active: dev
+  
+server:
+ port: 9015
+ servlet:
+  context-path: /Loan
+  

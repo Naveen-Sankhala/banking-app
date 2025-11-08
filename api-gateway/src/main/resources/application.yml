@@ -21,42 +21,55 @@ spring:
  cloud:
   config:
    profile: dev
-  gateway:
-   routes:
-    - id: bank-config-service
-      uri: lb://BANK-CONFIG-SERVICE
-      predicates:
-       - Path=/config/**
-      filters:
-       - PreserveHostHeader=true
-       - AddRequestHeader=X-Source, api-gateway
-    - id: customer-service
-      uri: lb://CUSTOMER-SERVICE
-      predicates:
-       - Path=/Customer/**
-      filters:
-       - PreserveHostHeader=true
-       - AddRequestHeader=X-Source, api-gateway
-    - id: account-service
-      uri: lb://ACCOUNT-SERVICE
-      predicates:
-       - Path=/Account/**
-      filters:
-       - PreserveHostHeader=true
-       - AddRequestHeader=X-Source, api-gateway
+#  gateway:
+#   routes:
+#    - id: bank-config-service
+#      uri: lb://BANK-CONFIG-SERVICE
+#      predicates:
+#       - Path=/config/**
+#      filters:
+#       - PreserveHostHeader=true
+#       - AddRequestHeader=X-Source, api-gateway
+#    - id: customer-service
+#      uri: lb://CUSTOMER-SERVICE
+#      predicates:
+#       - Path=/Customer/**
+#      filters:
+#       - PreserveHostHeader=true
+#       - AddRequestHeader=X-Source, api-gateway
+#    - id: account-service
+#      uri: lb://ACCOUNT-SERVICE
+#      predicates:
+#       - Path=/Account/**
+#      filters:
+#       - PreserveHostHeader=true
+#       - AddRequestHeader=X-Source, api-gateway  
+#    - id: transaction-service
+#      uri: lb://TRANSACTION-SERVICE
+#      predicates:
+#       - Path=/Transaction/**
+#      filters:
+#       - PreserveHostHeader=true
+#       - AddRequestHeader=X-Source, api-gateway 
+#    - id: loan-service
+#      uri: lb://LOAN-SERVICE
+#      predicates:
+#       - Path=/Loan/**
+#      filters:
+#       - PreserveHostHeader=true
+#       - AddRequestHeader=X-Source, api-gateway
+#    - id: fraud-detection-service
+#      uri: lb://FRAUD-DETECTION-SERVICE
+#      predicates:
+#       - Path=/Fraud-detect/**
+#      filters:
+#       - PreserveHostHeader=true
+#       - AddRequestHeader=X-Source, api-gateway
+#    - id: notification-service
+#      uri: lb://NOTIFIATION-SERVICE
+#      predicates:
+#       - Path=/Notification/**
+#      filters:
+#       - PreserveHostHeader=true
+#       - AddRequestHeader=X-Source, api-gateway
        
-# ===============================
-# Acutator -log Info
-# ===============================
-management:
- endpoints:
-  web:
-   base-path: /sysAdmin
-   exposure:
-    include: health,info,logfile,beans,heapdump
- endpoint:
-  gateway:
-   enabled: true
-  health:
-   show-details: always
-

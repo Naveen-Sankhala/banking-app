@@ -1,0 +1,10 @@
+spring:
+ application.name: transaction-service
+ profiles:
+  active: dev
+  
+server:
+ port: 9014
+ servlet:
+  context-path: /Transaction
+
