@@ -14,6 +14,8 @@ spring:
    token-uri: /oauth2/token
    token-expiration: 120
    refreshToken-expiration: 180
+ datasource:
+  password: LexisNexis2025!
     
 
 server:

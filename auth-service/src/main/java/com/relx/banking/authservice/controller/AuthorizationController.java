@@ -20,8 +20,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.relx.banking.authservice.client.BankConfigApi;
+import com.relx.banking.authservice.config.TokenService;
 import com.relx.banking.authservice.entity.UserRoles;
 import com.relx.banking.authservice.entity.Users;
 import com.relx.banking.authservice.jwt.JwtTokenRequest;
@@ -29,6 +32,7 @@ import com.relx.banking.authservice.jwt.JwtTokenResponse;
 import com.relx.banking.authservice.jwt.JwtTokenUtil;
 import com.relx.banking.authservice.service.IAuthorizationService;
 import com.relx.banking.authservice.util.ApiResponse;
+import com.relx.banking.commonrecord.BranchDetailsRecord;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -56,6 +60,12 @@ public class AuthorizationController {
 	private IAuthorizationService iAuthorizationService;
 	
 	@Autowired
+	private BankConfigApi bankConfigApi;
+	
+	@Autowired
+	private TokenService tokenService;
+	
+	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 	
 	@Autowired
@@ -69,12 +79,14 @@ public class AuthorizationController {
 	
 	@SuppressWarnings("unchecked")
 	//@PostMapping(value = "${oauth2.get.token.uri}")
-	@PostMapping("/oauth2/token")
+	@PostMapping("/oauth/token")
 	@ApiOperation(value = "Generate JWT Tokens For Login.", notes = "Also returns a refresh token for retrieve new tokens")
 	public ResponseEntity<?> createAuthenticationToken(HttpServletRequest request,
 			@ApiParam("All Fields to be obtained. Cannot be empty.") 
-			@Valid @RequestBody JwtTokenRequest authenticationRequest)
-					throws Exception {
+			@Valid @RequestParam("username") String username ,
+			@RequestParam("password") String password,
+			@RequestParam("branchId") Long branchId)
+					throws Exception { //@RequestBody JwtTokenRequest authenticationRequest
 
 		String remoteAddr = "";
 		if (request != null) {
@@ -91,26 +103,34 @@ public class AuthorizationController {
 //				throw new AuthenticationException(messageSource.getMessage("13", null, LocaleContextHolder.getLocale()), e);
 //			}
 //		}
+		
+		BranchDetailsRecord branInfo = bankConfigApi.getBranchDetails(3L, null);
 
-		final HashMap<String, Object> userDetailsMap = iAuthorizationService.loadUserByUsername(authenticationRequest.getUsername(),
-				authenticationRequest.getBranchId());
+		
+		final HashMap<String, Object> userDetailsMap = iAuthorizationService.loadUserByUsername(username,
+				branchId);
 
 		if(userDetailsMap!=null && userDetailsMap.containsKey("user") && userDetailsMap.containsKey("userRoles")) {
 			
-			List<String> userRoles = Optional.ofNullable((List<UserRoles>) userDetailsMap.get("userRoles"))
+			List<UserRoles> userRoles = (List<UserRoles>) userDetailsMap.get("userRoles");
+			
+			List<String> roles = Optional.ofNullable(userRoles)
 			        .orElse(Collections.emptyList())
 			        .stream()
 			        .map(role -> role.getMasRole().getRoleCode())
 			        .collect(Collectors.toList());
-
-//			final String sBranchName = ((List)userDetailsMap.get("userRoles")).iterator().next().getMasHospital().getHospitalName();
-//			final String sBranchType = ((List<UserRoles>)userDetailsMap.get("userRoles")).iterator().next().getMasHospital().getHospitalType();
 			
-			final String sBranchName = "Delhi Main Branch";
-			final String sBranchType = "CORPORATE";
-			final String token ="";		
-//			final String token = jwtTokenUtil.generateToken((Users)userDetailsMap.get("user"),userRoles,authenticationRequest.getBranchId(),sBranchName,sBranchType,"access");
-//			final String refreshToken = jwtTokenUtil.generateToken((Users)userDetailsMap.get("user"),userRoles,authenticationRequest.getBranchId(),sBranchName,sBranchType,"refresh");
+			boolean hasAccess = userRoles.stream()
+			        .anyMatch(role -> role.getBranchId().equals(branInfo.branchId()));
+
+			final String sBranchName = hasAccess ? branInfo.branchName() : null;
+			final String sBranchType = hasAccess ? branInfo.branchType() : null;
+			
+			logger.info("Branch Access → ID: {}, Name: {}, Type: {}", branInfo.branchId(), sBranchName, sBranchType);
+
+			final String token = tokenService.createAccessToken((Users)userDetailsMap.get("user"),roles,branchId,sBranchName,sBranchType,"access");		
+//			final String token = jwtTokenUtil.generateToken((Users)userDetailsMap.get("user"),roles,authenticationRequest.getBranchId(),sBranchName,sBranchType,"access");
+//			final String refreshToken = jwtTokenUtil.generateToken((Users)userDetailsMap.get("user"),roles,authenticationRequest.getBranchId(),sBranchName,sBranchType,"refresh");
 
 			HashMap<String, Object> userLog = new HashMap<String, Object>();
 			userLog.put("userId", ((Users)userDetailsMap.get("user")).getUserId());

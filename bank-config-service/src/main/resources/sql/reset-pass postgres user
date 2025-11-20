@@ -1,0 +1,22 @@
+Use pg_hba.conf to Temporarily Disable Password Requirement
+1. Edit pg_hba.conf
+ -> Windows: C:\Program Files\PostgreSQL\<version>\data\pg_hba.conf
+  
+   	Find the line like:
+	local   all             all                                     md5
+	
+	Change md5 → trust:
+	local   all             all                                     trust
+	
+2. Restart PostgreSQL
+  -> sudo systemctl restart postgresql
+  
+3. Connect without password
+ -> psql -U postgres
+
+4. Reset password
+ -> ALTER USER postgres WITH PASSWORD 'NewPassword123!';
+ 
+
+5. Restore security
+ -> Change trust back to md5 and restart PostgreSQL again.
