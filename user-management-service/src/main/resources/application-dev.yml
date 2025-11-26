@@ -1,0 +1,6 @@
+spring:
+ config:
+  import : "optional:configserver:http://localhost:9002/config-server/"
+ cloud:
+  config:
+   profile: dev

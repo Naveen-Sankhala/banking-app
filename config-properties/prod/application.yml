@@ -68,9 +68,9 @@ config:
 auth-server:
   url: http://localhost:9003/Auth
 api-gateway:
-  url: http://localhost:9004
+  url: http://localhost:9004  
 user-service:
- url: http://localhost:9010/User  
+    url: http://localhost:9010/User
 config-service:
   url: http://localhost:9011/config
 customer-service:

@@ -1,3 +1,49 @@
+-------------------------------------------------------------------------
+------------------------------Mas_State----------------------------------
+-------------------------------------------------------------------------
+INSERT INTO mas_state(State_Code,State_Name,Country_Id) values
+('AP', 1, 'Andhra Pradesh'),
+('AR', 1, 'Arunachal Pradesh'),
+('AS', 1, 'Assam'),
+('BR', 1, 'Bihar '),
+('CG', 1, 'Chhattisgarh'),
+('GA', 1, 'Goa'),
+('GJ', 1, 'Gujarat'),
+('HR', 1, 'Haryana'),
+('HP', 1, 'Himachal Pradesh'),
+('JH', 1, 'Jharkhand'),
+('KA', 1, 'Karnataka'),
+('KL', 1, 'Kerala'),
+('MP', 1, 'Madhya Pradesh'),
+('MH', 1, 'Maharashtra'),
+('MN', 1, 'Manipur'),
+('ML', 1, 'Meghalaya'),
+('MZ', 1, 'Mizoram'),
+('NL', 1, 'Nagaland'),
+('OD', 1, 'Odisha'),
+('PB', 1, 'Punjab'),
+('RJ', 1, 'Rajasthan'),
+('SK', 1, 'Sikkim'),
+('TN', 1, 'Tamil Nadu'),
+('TS', 1, 'Telangana'),
+('TR', 1, 'Tripura'),
+('UP', 1, 'Uttar Pradesh'),
+('UK', 1, 'Uttarakhand'),
+('WB', 1, 'West Bengal'),
+('AN', 1, 'Andaman and Nicobar Islands'),
+('CH', 1, 'Chandigarh'),
+('DD', 1, 'Dadra and Nagar Haveli and Daman and Diu'),
+('DL', 1, 'Delhi'),
+('JK', 1, 'Jammu and Kashmir'),
+('LD', 1, 'Ladakh'),
+('LK', 1, 'Lakshadweep'),
+('PY', 1, 'Puducherry');
+
+
+-------------------------------------------------------------------------
+------------------------------Mas_City----------------------------------
+-------------------------------------------------------------------------
+
 INSERT INTO Mas_City (City_Name, State_Id) VALUES 
 ('Alluri Sitharama Raju',1),
 ('Anakapalli',1),
@@ -898,72 +944,3 @@ INSERT INTO Mas_City (City_Name, State_Id) VALUES
 ('Yanam', 36);
 
 -- Total 776
-
-
-update mas_city set city_code ='EGH_ML' where city_id=403;
-update mas_city set city_code ='EJH_ML' where city_id=404;
-update mas_city set city_code ='EK_AR' where city_id=30 ;
-update mas_city set city_code ='EKH_ML' where city_id=405;
-update mas_city set city_code ='ES_AR' where city_id=31 ;
-update mas_city set city_code ='GHAZ_UP' where city_id=649;
-update mas_city set city_code ='GHAZI_UP' where city_id=650;
-update mas_city set city_code ='IMPE_MN' where city_id=390;
-update mas_city set city_code ='IMPW_MN' where city_id=391;
-update mas_city set city_code ='KAMR_AS' where city_id=71 ;
-update mas_city set city_code ='KAME_AS' where city_id=72 ;
-update mas_city set city_code ='KAND_UP' where city_id=661;
-update mas_city set city_code ='KANP_UP' where city_id=662;
-update mas_city set city_code ='KENDR_OD' where city_id=458;
-update mas_city set city_code ='KENDU_OD' where city_id=459;
-update mas_city set city_code ='LDV_AR' where city_id=39 ;
-update mas_city set city_code ='LOSI_AR' where city_id=40 ;
-update mas_city set city_code ='LOSU_AR' where city_id=41 ;
-update mas_city set city_code ='MADHP_BR' where city_id=107;
-update mas_city set city_code ='MADHB_BR' where city_id=108;
-update mas_city set city_code ='MABAD_TS' where city_id=590;
-update mas_city set city_code ='MAGAR_TS' where city_id=591;
-update mas_city set city_code ='ND_DL' where city_id=740;
-update mas_city set city_code ='NED_DL' where city_id=741;
-update mas_city set city_code ='NWD_DL' where city_id=742;
-update mas_city set city_code ='PAM_WB' where city_id=724;
-update mas_city set city_code ='PAB_WB' where city_id=723;
-update mas_city set city_code ='PUB_WB' where city_id=725;
-update mas_city set city_code ='PUM_WB' where city_id=726;
-update mas_city set city_code ='TIRLI_TN' where city_id=570;
-update mas_city set city_code ='TIRUN_TN' where city_id=571;
-update mas_city set city_code ='TIRUP_TN' where city_id=572;
-update mas_city set city_code ='TIRUV_TN' where city_id=573;
-update mas_city set city_code ='TIRUR_TN' where city_id=574;
-update mas_city set city_code ='UPSI_AR' where city_id=49 ;
-update mas_city set city_code ='UPSU_AR' where city_id=50 ;
-update mas_city set city_code ='VIJGAR_KA' where city_id=280;
-update mas_city set city_code ='VIJRA_KA' where city_id=281;
-update mas_city set city_code ='WGH_ML' where city_id=411;
-update mas_city set city_code ='WJH_ML' where city_id=412;
-update mas_city set city_code ='WK_AR' where city_id=51 ;
-update mas_city set city_code ='WKH_ML' where city_id=413;
-update mas_city set city_code ='WESI_AR' where city_id=52 ;
-update mas_city set city_code ='CHAMO_UK' where city_id=696;
-update mas_city set city_code ='CHAMP_UK' where city_id=697;
-update mas_city set city_code ='BALAN_OD' where city_id=443;
-update mas_city set city_code ='BALAS_OD' where city_id=444;
-update mas_city set city_code ='BALOD_CG' where city_id=126;
-update mas_city set city_code ='BABA_CG' where city_id=127;
-update mas_city set city_code ='MALA_MP' where city_id=324;
-update mas_city set city_code ='MAUR_MP' where city_id=325;
-update mas_city set city_code ='MUMC_MH' where city_id=367;
-update mas_city set city_code ='MUMS_MH' where city_id=368;
-update mas_city set city_code ='NAED_MH' where city_id=370;
-update mas_city set city_code ='NAAR_MH' where city_id=371;
-update mas_city set city_code ='CHTU_TN' where city_id=543;
-update mas_city set city_code ='CHEN_TN' where city_id=544;
-update mas_city set city_code ='CHIKR_KA' where city_id=259;
-update mas_city set city_code ='CHIKU_KA' where city_id=260;
-update mas_city set city_code ='SWKH_ML' where city_id=410;
-update mas_city set city_code ='SWGH_ML' where city_id=409;
-update mas_city set city_code ='SWD_DL' where city_id=746;
-update mas_city set city_code ='BENR_KA' where city_id=255;
-update mas_city set city_code ='BENU_KA' where city_id=256;
-update mas_city set city_code ='SD_DL' where city_id=744;
-update mas_city set city_code ='SED_DL' where city_id=745;
-update mas_city set city_code ='SGH_ML' where city_id=408;

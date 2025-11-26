@@ -1,3 +1,17 @@
+
+-------------------------------------------------------------------------
+------Add FK constraint for User table Customer_Id and Branch Id---------
+-------------------------------------------------------------------------
+ALTER TABLE USERS ADD  CONSTRAINT FK_Customer FOREIGN KEY (Customer_Id) REFERENCES CUSTOMER(Customer_Id) ON DELETE CASCADE;
+-- This excecute After Branch create and have a record inside and that id map with user table
+ALTER TABLE USERS ADD  CONSTRAINT FK_Branch FOREIGN KEY (Branch_Id) REFERENCES BRANCH(Branch_Id);
+
+
+-------------------------------------------------------------------------
+------Add FK constraint for User table Customer_Id and Branch Id---------
+-------------------------------------------------------------------------
+
+
 CREATE TABLE BANK_TYPE (
 	Id BIGSERIAL,
     Type_Code   VARCHAR(30) PRIMARY KEY,
@@ -223,8 +237,8 @@ $$ LANGUAGE plpgsql;
 INSERT INTO Branch 
 (Zr_Id, Branch_Code, Branch_Name, Ifsc_Code, Swift_Code, Chk_Clearing_Code, 
  Address_Line1, Address_Line2, City_Id, State_Id, Zipcode, Country_Id, 
- Phone_Number, Email, Status, Branch_Type, Manager_Id, Is_BranchOpen, 
- Opening_Date, Max_Cash_Limit, Gst_No, Gst_Reg_Name, Gst_Reg_Pan_No, Pool_Accocunt, 
+ Phone_Number, Email, Status, Branch_Type, Manager_Id, Is_Branch_Open, 
+ Opening_Date, Max_Cash_Limit, Gst_No, Gst_Reg_Name, Gst_Reg_Pan_No, Pool_Account, 
  Created_By, Created_Date)
 VALUES
 -- Chennai Region branch
@@ -264,10 +278,6 @@ VALUES
  1, '2025-09-14 14:54:30.277856');
  
  
- 
- 
- 
-
 
 ---------------------------------------------------------------
 ---------------------------------------------------------------

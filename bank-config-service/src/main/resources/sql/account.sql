@@ -93,7 +93,7 @@ CREATE TABLE ACCOUNT (
     Account_Number   VARCHAR(20) UNIQUE NOT NULL,
     Customer_Id      BIGINT NOT NULL REFERENCES CUSTOMER(Customer_Id),
     Account_Type     VARCHAR(10) NOT NULL REFERENCES Acc_Categories(Acc_Cat_SName),  -- FK to Account_Type
-    Currency_Code    CHAR(3) NOT NULL DEFAULT 'USD',
+    Currency_Code    CHAR(3) NOT NULL DEFAULT 'INR',
     Balance          DECIMAL(18,2) NOT NULL DEFAULT 0.00,
     Status           VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
     Opened_Date      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

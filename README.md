@@ -1,5 +1,11 @@
-As prectice to create a centralize banking micro service app.
+Git config:
+git add .
+git config user.name "Naveen-Sankhala"
+git config user.email "naveen.sankhala24@gmail.com
+git commit -m "Auth-service changes"
 
+
+As prectice to create a centralize banking micro service app.
 
 🚀 Startup Order (with dependencies)
 

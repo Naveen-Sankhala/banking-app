@@ -1,3 +1,123 @@
+--------------------------Create a function that generates City_Code
+
+CREATE OR REPLACE FUNCTION Generate_City_Code()
+RETURNS TRIGGER AS $$
+DECLARE
+    state_code VARCHAR(50);
+    base_code VARCHAR(20);
+    code3 VARCHAR(20);
+    code4 VARCHAR(20);
+    code_two_word VARCHAR(20);
+    existing_count INT;
+
+    city_clean TEXT;
+    word1 TEXT;
+    word2 TEXT;
+    final_code TEXT;
+    counter INT := 1;
+BEGIN
+    -- 1. Get state code
+    SELECT ms.State_Code INTO state_code
+    FROM Mas_State ms
+    WHERE ms.State_Id = NEW.State_Id;
+
+    -- Clean city name by removing spaces
+    city_clean := REPLACE(NEW.City_Name, ' ', '');
+
+    -------------------------------------------------------------------
+    -- OPTION 1 → First 3 characters
+    -------------------------------------------------------------------
+    code3 := UPPER(LEFT(city_clean, 3) || '_' || state_code);
+
+    SELECT COUNT(*) INTO existing_count
+    FROM mas_city
+    WHERE city_code = code3;
+
+    IF existing_count = 0 THEN
+        NEW.City_Code := code3;
+        RETURN NEW;
+    END IF;
+
+    -------------------------------------------------------------------
+    -- OPTION 2 → First 4 characters
+    -------------------------------------------------------------------
+    code4 := UPPER(LEFT(city_clean, 4) || '_' || state_code);
+
+    SELECT COUNT(*) INTO existing_count
+    FROM mas_city
+    WHERE city_code = code4;
+
+    IF existing_count = 0 THEN
+        NEW.City_Code := code4;
+        RETURN NEW;
+    END IF;
+
+    -------------------------------------------------------------------
+    -- OPTION 3 → If city name has TWO WORDS → use hybrid logic
+    -- Format = first 2 letters of word1 + first letter of word2 + first letter of word1
+    -- Example: "Lower Assam" → "LOAL_AS"
+    -------------------------------------------------------------------
+    word1 := SPLIT_PART(NEW.City_Name, ' ', 1);
+    word2 := SPLIT_PART(NEW.City_Name, ' ', 2);
+
+    IF word2 IS NOT NULL AND word2 <> '' THEN
+        code_two_word := UPPER(
+            LEFT(word1, 2) || 
+            LEFT(word2, 1) ||
+            LEFT(word1, 1) || 
+            '_' || state_code
+        );
+
+        SELECT COUNT(*) INTO existing_count
+        FROM mas_city
+        WHERE city_code = code_two_word;
+
+        IF existing_count = 0 THEN
+            NEW.City_Code := code_two_word;
+            RETURN NEW;
+        END IF;
+    END IF;
+
+    -------------------------------------------------------------------
+    -- OPTION 4 → First 5 characters if all previous options failed
+    -------------------------------------------------------------------
+    final_code := UPPER(LEFT(city_clean, 5) || '_' || state_code);
+
+    SELECT COUNT(*) INTO existing_count
+    FROM mas_city
+    WHERE city_code = final_code;
+
+    IF existing_count = 0 THEN
+        NEW.City_Code := final_code;
+        RETURN NEW;
+    END IF;
+
+    -------------------------------------------------------------------
+    -- OPTIONAL FALLBACK → Append numeric sequence if all methods fail
+    -------------------------------------------------------------------
+    LOOP
+        final_code := UPPER(LEFT(city_clean, 5) || '_' || state_code || '_' || counter);
+
+        EXIT WHEN NOT EXISTS(
+            SELECT 1 FROM mas_city WHERE city_code = final_code
+        );
+
+        counter := counter + 1;
+    END LOOP;
+
+    -- Assign the final unique City_Code
+    NEW.City_Code := final_code;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER City_Code_Trigger
+BEFORE INSERT ON Mas_City
+FOR EACH ROW
+EXECUTE FUNCTION Generate_City_Code();
+
+
 ---------------------Create Customer Identification Numebr
 1. -> Alphabet Prefix Function And Trigger Function to Build Customer ID
 
@@ -16,8 +136,12 @@ BEGIN
 	
 	
 	-- Special case: if name is ADMIN USER or SUPER USER
-    IF UPPER(NEW.first_name) = 'ADMIN' OR UPPER(NEW.first_name) = 'SUPER' THEN
-        prefix := UPPER(NEW.first_name);
+    IF UPPER(NEW.first_name) IN ('ADMIN', 'SUPER', 'DBA', 'DATABASE','IT','CBS') THEN
+		IF UPPER(NEW.first_name) = 'DATABASE' THEN
+            prefix := 'DBA';
+        ELSE
+            prefix := UPPER(NEW.first_name);
+        END IF;
     ELSE
     -- Generate alphabet prefix (4 letters)
 		n := seq_val - 1; -- zero-based for letters

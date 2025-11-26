@@ -33,19 +33,7 @@ CREATE TABLE Mas_City (
     State_Id INT NOT NULL REFERENCES Mas_State(State_Id) ON DELETE CASCADE
 );
 
---ALTER TABLE Mas_City ALTER COLUMN City_Code SET NOT NULL;
---ALTER TABLE Mas_City ADD CONSTRAINT Uq_City_Code UNIQUE (City_Code);
 
---ALTER TABLE Mas_City ADD COLUMN City_Code VARCHAR(20);
-UPDATE Mas_City m
-SET City_Code = UPPER(LEFT(REPLACE(m.City_Name, ' ', ''), 4) || '_' || s.State_Code)
-FROM Mas_State s
-WHERE m.State_Id = s.State_Id;
-
---SELECT City_Code, COUNT(*) AS duplicate_count
---FROM Mas_City
---GROUP BY City_Code
---HAVING COUNT(*) > 1;
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------
 
@@ -66,12 +54,12 @@ CREATE TABLE Mas_Currency (
     Currency_Id    BIGSERIAL PRIMARY KEY, 
     Currency_Name  VARCHAR(100) NOT NULL,
     Currency_Code  CHAR(3) NOT NULL UNIQUE,
-    Country_Id     BIGINT,
-    CONSTRAINT Fk_Currency_Country FOREIGN KEY (Country_Id) REFERENCES Mas_Country(Country_Id)
+    Country_Id     INT NOT NULL REFERENCES Mas_Country(Country_Id) ON DELETE CASCADE,
+	Status		   VARCHAR(20) NOT NULL default 'INACTIVE'
 );
 
-INSERT INTO MAS_CURRENCY (currency_name, currency_code, country_id)
+INSERT INTO MAS_CURRENCY (currency_name, currency_code, country_id,status)
 VALUES
-('Indian Rupee', 'INR', 1), 
-('US Dollar', 'USD', 2),
-('Euro', 'EUR', null);
+('Indian Rupee', 'INR', 1,'ACTIVE'), 
+('US Dollar', 'USD', 2,'INACTIVE'),
+('Euro', 'EUR', 3,'INACTIVE');

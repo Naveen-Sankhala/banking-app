@@ -1,0 +1,9 @@
+spring:
+ application.name: user-management-service
+ profiles:
+  active: dev
+  
+server:
+ port: 9010
+ servlet:
+  context-path: /User
