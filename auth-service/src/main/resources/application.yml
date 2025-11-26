@@ -23,11 +23,11 @@ server:
  servlet:
   context-path: /Auth
 
-eureka:
- client:
-  service-url:
-   defaultZone: http://localhost:9001/eureka/
-   
+#eureka:
+# client:
+#  service-url:
+#   defaultZone: http://localhost:9001/eureka/
+#   
 
 corss:
  url: "*" 
