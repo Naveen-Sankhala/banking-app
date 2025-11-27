@@ -25,7 +25,7 @@ public class TokenService {
 		this.rsaKey = rsaKey;
 	}
 
-	public String createAccessToken(Users users, List<String> roles, long branchId, String sBranchName, String sBranchType, String string) {
+	public String generateAccessToken(Users users, List<String> roles, long branchId, String sBranchName, String sBranchType, String string) {
 		try {
 			Instant now = Instant.now();
 			JWSSigner signer = new RSASSASigner(rsaKey.toPrivateKey());

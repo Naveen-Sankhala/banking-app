@@ -48,7 +48,7 @@ public class ConfigServiceImpl implements IConfigService {
 
 	@Override
 	public BranchDetailsRecord getBranchDetails(Long branchId) {
-		Branch branch =	iConfigDao.getBranchDetails(branchId,"Active");
+		Branch branch =	iConfigDao.getBranchDetails(branchId,"ACTIVE");
 		return ObjectMapperUtils.map(branch, BranchDetailsRecord.class);
 
 	}
@@ -56,7 +56,7 @@ public class ConfigServiceImpl implements IConfigService {
 	@Override
 	public BranchDetailsRecord getBranchDetails(String branchCode) {
 
-		Branch branch =	iConfigDao.getBranchDetails(branchCode,"Active");
+		Branch branch =	iConfigDao.getBranchDetails(branchCode,"ACTIVE");
 		return ObjectMapperUtils.map(branch, BranchDetailsRecord.class);
 	}
 }

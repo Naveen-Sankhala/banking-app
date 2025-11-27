@@ -104,7 +104,7 @@ public class AuthorizationController {
 //			}
 //		}
 		
-		BranchDetailsRecord branInfo = bankConfigApi.getBranchDetails(3L, null);
+		BranchDetailsRecord branInfo = bankConfigApi.getBranchDetails(branchId, null);
 
 		
 		final HashMap<String, Object> userDetailsMap = iAuthorizationService.loadUserByUsername(username,
@@ -128,18 +128,18 @@ public class AuthorizationController {
 			
 			logger.info("Branch Access → ID: {}, Name: {}, Type: {}", branInfo.branchId(), sBranchName, sBranchType);
 
-			final String token = tokenService.createAccessToken((Users)userDetailsMap.get("user"),roles,branchId,sBranchName,sBranchType,"access");		
+			final String token = tokenService.generateAccessToken((Users)userDetailsMap.get("user"),roles,branchId,sBranchName,sBranchType,"access");		
 //			final String token = jwtTokenUtil.generateToken((Users)userDetailsMap.get("user"),roles,authenticationRequest.getBranchId(),sBranchName,sBranchType,"access");
 //			final String refreshToken = jwtTokenUtil.generateToken((Users)userDetailsMap.get("user"),roles,authenticationRequest.getBranchId(),sBranchName,sBranchType,"refresh");
-
+			final String refreshToken="";
 			HashMap<String, Object> userLog = new HashMap<String, Object>();
 			userLog.put("userId", ((Users)userDetailsMap.get("user")).getUserId());
 			userLog.put("ipAddress", remoteAddr);
-			userLog.put("refreshToken", null);//refreshToken
+			userLog.put("refreshToken", refreshToken);//refreshToken
 			userLog.put("type", "access");
-			LocalDateTime lastLoggedInTime=iAuthorizationService.addUserLog(userLog);
-			return ResponseEntity.ok(HttpStatus.ACCEPTED);
-			//return ResponseEntity.ok(new JwtTokenResponse(token, refreshToken, ((Users)userDetailsMap.get("user")).getUsername(),sBranchName, ((Users)userDetailsMap.get("user")).getLoginName(),lastLoggedInTime));
+			//LocalDateTime lastLoggedInTime=iAuthorizationService.addUserLog(userLog);
+			LocalDateTime lastLoggedInTime = LocalDateTime.now();
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new JwtTokenResponse(token, refreshToken, ((Users)userDetailsMap.get("user")).getUsername(),sBranchName, ((Users)userDetailsMap.get("user")).getLoginName(),lastLoggedInTime));
 		}else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false,messageSource.getMessage("6", null, LocaleContextHolder.getLocale())));
 		}
