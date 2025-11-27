@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+//import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -36,7 +36,7 @@ public class ConfigListener {
 		this.configHolder = configHolder;
 	}
 
-	@RabbitListener(queues = "bank.config.queue")
+	//@RabbitListener(queues = "bank.config.queue")
 	public void handleConfigUpdate(ConfigChangedEvent event) {
 		cachedConfigs.put(event.getKey(), event.getValue());
 		logger.info("♻️ Config updated from MQ: {}", event.getKey());

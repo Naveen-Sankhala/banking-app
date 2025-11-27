@@ -4,3 +4,15 @@ spring:
  cloud:
   config:
    profile: dev
+
+  vault:
+   uri: http://localhost:8200           # Vault server URL
+   token: s.YourVaultTokenHere          # Vault token (or use AppRole)
+   connection-timeout: 2000
+   read-timeout: 2000
+   scheme: http
+   authentication: APPROLE                # TOKEN, APPROLE, KUBERNETES, etc.
+   kv:
+    enabled: true                      # Enable Key/Value secrets engine
+    backend: secret                    # Path of KV store (e.g., secret/)
+    default-context: application       # Default context (application name)

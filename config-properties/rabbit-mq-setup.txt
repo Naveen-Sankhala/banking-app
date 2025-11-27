@@ -1,0 +1,85 @@
+---------------------------------------
+	RabbitMQ Server Problem Fix
+---------------------------------------
+
+🧩 Start RabbitMQ Server
+Run:
+	net start RabbitMQ
+
+🧩 Stop RabbitMQ Server
+Run:
+	net stop RabbitMQ
+
+📊 Check RabbitMQ Status
+Run:
+	rabbitmqctl status
+
+
+Path Problen Step-by-Step Fix
+🧩 1. Locate RabbitMQ installation folder
+--> C:\Program Files\RabbitMQ Server\rabbitmq_server-<version>\
+To Set Enviornment Variable path
+
+Then test Plugin list:
+Run:
+	rabbitmq-plugins list
+
+🧩 If get error then set plugin 
+Run:
+	rabbitmq-plugins enable rabbitmq_management
+
+🧩 Then restart the service:
+Run:
+	net stop RabbitMQ
+	net start RabbitMQ
+
+🧩 If get “System error 5 – Access is denied” message
+🧩 Fix: Run Command Prompt as Administrator
+“Command Prompt” → choose “Run as administrator.”
+Run:
+	net stop RabbitMQ
+	net start RabbitMQ
+
+🧩 If get TCP connection succeeded but Erlang distribution failed
+Check cookie file this path
+🧩 A. RabbitMQ service cookie (used by the service)
+Usually located here:
+	C:\Windows\System32\config\systemprofile\.erlang.cookie
+
+🧩 B. Your user’s CLI cookie
+	C:\Users\Pc\.erlang.cookie
+
+Copy the code from user CLI and past into systemprofile .erlang.cookie file
+
+🧩 If get permission denied error then -->
+🪜 Step-by-Step Fix
+1️. Open Command Prompt → Run as administrator
+2️. Check if the cookie file exists
+Run:
+	dir "C:\Windows\System32\config\systemprofile\.erlang.cookie"
+
+3️. Read the file’s contents as Administrator
+Run:
+		type C:\Windows\System32\config\systemprofile\.erlang.cookie
+
+4️. Copy that exact value
+Now open your user’s cookie file in Notepad:
+Run:
+	notepad "%USERPROFILE%\.erlang.cookie"
+
+Then replace whatever is in there with the value you saw above.
+Save and close the file.
+
+5️. Fix file permissions
+Make sure RabbitMQ can read it:
+Run:
+	icacls "%USERPROFILE%\.erlang.cookie" /inheritance:r /grant "%USERNAME%:R" /grant "SYSTEM:R"
+
+6️. Restart RabbitMQ service
+Run:
+	net stop RabbitMQ
+	net start RabbitMQ
+
+7️. Test again
+Run:
+	rabbitmqctl status
