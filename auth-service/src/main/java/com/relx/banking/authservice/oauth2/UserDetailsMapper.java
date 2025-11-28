@@ -1,4 +1,4 @@
-package com.relx.banking.authservice.jwt;
+package com.relx.banking.authservice.oauth2;
 
 import java.util.Collection;
 import java.util.HashSet;

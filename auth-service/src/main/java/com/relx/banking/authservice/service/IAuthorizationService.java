@@ -2,6 +2,7 @@ package com.relx.banking.authservice.service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -25,5 +26,7 @@ public interface IAuthorizationService {
 	Users loadUserByUsername(String username);
 
 	HashMap<String, Object> getAuthority(long userId, long barnchId);
+
+	Object getMenus(List<String> roles);
 
 }

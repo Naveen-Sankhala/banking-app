@@ -1,9 +1,11 @@
 package com.relx.banking.authservice.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -14,24 +16,27 @@ import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.relx.banking.authservice.client.BankConfigApi;
-import com.relx.banking.authservice.config.TokenService;
 import com.relx.banking.authservice.entity.UserRoles;
 import com.relx.banking.authservice.entity.Users;
-import com.relx.banking.authservice.jwt.JwtTokenRequest;
-import com.relx.banking.authservice.jwt.JwtTokenResponse;
-import com.relx.banking.authservice.jwt.JwtTokenUtil;
+import com.relx.banking.authservice.oauth2.ClaimsData;
+import com.relx.banking.authservice.oauth2.JwtTokenResponse;
+import com.relx.banking.authservice.oauth2.OAuthTokenUtill;
 import com.relx.banking.authservice.service.IAuthorizationService;
 import com.relx.banking.authservice.util.ApiResponse;
+import com.relx.banking.authservice.util.AuthenticationException;
 import com.relx.banking.commonrecord.BranchDetailsRecord;
 
 import io.swagger.annotations.ApiOperation;
@@ -57,17 +62,14 @@ public class AuthorizationController {
 		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
 	}
 	@Autowired
-	private IAuthorizationService iAuthorizationService;
+	private IAuthorizationService iAuthService;
 	
 	@Autowired
 	private BankConfigApi bankConfigApi;
 	
 	@Autowired
-	private TokenService tokenService;
-	
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
-	
+	private OAuthTokenUtill authTokenUtill;
+		
 	@Autowired
 	private MessageSource messageSource; 
 	
@@ -107,7 +109,7 @@ public class AuthorizationController {
 		BranchDetailsRecord branInfo = bankConfigApi.getBranchDetails(branchId, null);
 
 		
-		final HashMap<String, Object> userDetailsMap = iAuthorizationService.loadUserByUsername(username,
+		final HashMap<String, Object> userDetailsMap = iAuthService.loadUserByUsername(username,
 				branchId);
 
 		if(userDetailsMap!=null && userDetailsMap.containsKey("user") && userDetailsMap.containsKey("userRoles")) {
@@ -128,16 +130,14 @@ public class AuthorizationController {
 			
 			logger.info("Branch Access → ID: {}, Name: {}, Type: {}", branInfo.branchId(), sBranchName, sBranchType);
 
-			final String token = tokenService.generateAccessToken((Users)userDetailsMap.get("user"),roles,branchId,sBranchName,sBranchType,"access");		
-//			final String token = jwtTokenUtil.generateToken((Users)userDetailsMap.get("user"),roles,authenticationRequest.getBranchId(),sBranchName,sBranchType,"access");
-//			final String refreshToken = jwtTokenUtil.generateToken((Users)userDetailsMap.get("user"),roles,authenticationRequest.getBranchId(),sBranchName,sBranchType,"refresh");
-			final String refreshToken="";
+			final String token = authTokenUtill.generateAccessToken((Users)userDetailsMap.get("user"),roles,branchId,sBranchName,sBranchType,"access");		
+			final String refreshToken = authTokenUtill.generateAccessToken((Users)userDetailsMap.get("user"),roles,branchId,sBranchName,sBranchType,"refresh");
 			HashMap<String, Object> userLog = new HashMap<String, Object>();
 			userLog.put("userId", ((Users)userDetailsMap.get("user")).getUserId());
 			userLog.put("ipAddress", remoteAddr);
-			userLog.put("refreshToken", refreshToken);//refreshToken
+			userLog.put("refreshToken", refreshToken);
 			userLog.put("type", "access");
-			//LocalDateTime lastLoggedInTime=iAuthorizationService.addUserLog(userLog);
+			//LocalDateTime lastLoggedInTime=iAuthService.addUserLog(userLog);
 			LocalDateTime lastLoggedInTime = LocalDateTime.now();
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new JwtTokenResponse(token, refreshToken, ((Users)userDetailsMap.get("user")).getUsername(),sBranchName, ((Users)userDetailsMap.get("user")).getLoginName(),lastLoggedInTime));
 		}else {
@@ -145,11 +145,89 @@ public class AuthorizationController {
 		}
 	}
 
+	
+	@PostMapping(value = "/oauth/refresh", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	@ApiOperation(value = "Generate Refresh Tokens For Login.", notes = " Returns Access and Refresh token..")
+	public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request,
+			@ApiParam("refreshToken Field to be obtained. Cannot be empty.") 
+			@Valid @RequestParam("refreshToken") String refToken) throws Exception {
+
+		String remoteAddr = "";
+		if (request != null) {
+			remoteAddr = request.getHeader("X-FORWARDED-FOR");
+			if (remoteAddr == null || "".equals(remoteAddr)) {
+				remoteAddr = request.getRemoteAddr();
+			}
+		}
+		//String authToken = request.getHeader(tokenHeader);
+		if(refToken!=null && !refToken.equals("")) {
+			final String token = refToken;
+			boolean isTokenExpired = false;
+
+			try {
+				isTokenExpired = authTokenUtill.isTokenExpired(token);
+				
+			} catch (IllegalArgumentException  e) {
+				isTokenExpired=true;
+				throw new AuthenticationException(messageSource.getMessage("10", null, LocaleContextHolder.getLocale()), e);
+			} 
+			
+			if(!isTokenExpired) {
+
+				ClaimsData claimsData = authTokenUtill.parseToken(token);
+
+				boolean isRefreshTokenExists = iAuthService.isRefreshTokenExists(remoteAddr,claimsData.getUserId(),token);
+
+				if(isRefreshTokenExists) {
+					final String accessToken = authTokenUtill.refreshToken(token,"access");
+					final String refreshToken = authTokenUtill.refreshToken(token,"refresh");
 
 
+					HashMap<String, Object> userLog = new HashMap<String, Object>();
+					userLog.put("userId", claimsData.getUserId());
+					userLog.put("refreshToken", refreshToken);
+					userLog.put("type", "refresh");
+					LocalDateTime lastLoggedInTime=iAuthService.addUserLog(userLog);
+
+					return ResponseEntity.status(HttpStatus.ACCEPTED).body(new JwtTokenResponse(accessToken,refreshToken,claimsData.getUserName(),claimsData.getBranchName(),claimsData.getLoginName(),lastLoggedInTime));
+				}
+			}
+		}
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false,messageSource.getMessage("10", null, LocaleContextHolder.getLocale())));
+	}
 
 	
-	@Autowired
-	private IAuthorizationService iAuthService;
+	private void authenticate(String username, String password) {
+		Objects.requireNonNull(username);
+		Objects.requireNonNull(password);
+
+		try {
+			//authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+		} catch (DisabledException e) {
+			throw new AuthenticationException("USER_DISABLED", e);
+		} catch (BadCredentialsException e) {
+			throw new AuthenticationException(messageSource.getMessage("9", null, LocaleContextHolder.getLocale()), e);
+		}
+	}
+	
+	@GetMapping(value = "/getMenus")
+	@ApiOperation(value = "Get Menu List", notes = " Get Menu List According to Login User.")
+	ResponseEntity<?> getMenus(){
+		//List<String> roles=iAuthenticationFacade.getUserRoles();
+		List<String> roles= new ArrayList<String>();
+		return ResponseEntity.ok(iAuthService.getMenus(roles));
+	}
+	
+	@PostMapping(value = "logout")//${jwt.logout.token.uri}
+	@ApiOperation(value = "LogOut Request.", notes = " Also Destroyed the refresh token..")
+	ResponseEntity<?> logout(
+			@ApiParam("refreshToken Field to be obtained. Cannot be empty.") 
+			@Valid @RequestParam("refreshToken") String refreshToken){
+		boolean result= iAuthService.logout(refreshToken);
+		if(result)
+			return ResponseEntity.ok(new ApiResponse(result,messageSource.getMessage("8", null, LocaleContextHolder.getLocale())));
+		else
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse(false,messageSource.getMessage("2", null, LocaleContextHolder.getLocale())));
+	}
 	
 }

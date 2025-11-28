@@ -1,4 +1,4 @@
-package com.relx.banking.authservice.jwt;
+package com.relx.banking.authservice.oauth2;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,9 +18,9 @@ public class ClaimsData implements Serializable {
 	private Long UserId;
 	private String UserName;
 	private String LoginName;
-	private Long branchId;
-	private String branchName;
-	private String branchType;
+	private Long BranchId;
+	private String BranchName;
+	private String BranchType;
 	private List<String> Roles;
 
 }

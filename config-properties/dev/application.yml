@@ -54,6 +54,16 @@ spring:
   message-converter:
    json:
     trusted-packages: com.relx.banking,java.util,java.lang
+# ===============================
+# Message Property Read
+# =============================== 
+ mvc:
+  pathmatch:
+   matching-strategy: ant_path_matcher
+ output:
+  ansi:
+   enabled: always
+ messages.basename: messages
      
 
 config:

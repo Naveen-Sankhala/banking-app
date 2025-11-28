@@ -118,5 +118,11 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
 		return iAuthorizationDao.getAuthority(userId, barnchId);
 	}
 
+	@Override
+	public Object getMenus(List<String> roles) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }
