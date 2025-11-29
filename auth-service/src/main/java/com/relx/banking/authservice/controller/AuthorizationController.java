@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,12 +51,13 @@ import jakarta.validation.Valid;
  * Sep 23, 2025
  */
 @RestController
+@RequestMapping("oauth")
 @CrossOrigin(origins = "${corss.url}")
 @Tag(name = "authorization-controller", description = "Set of endpoints for Login in Application.")
 public class AuthorizationController {
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(AuthorizationController.class);
-	
+
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
 		StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
@@ -63,32 +65,30 @@ public class AuthorizationController {
 	}
 	@Autowired
 	private IAuthorizationService iAuthService;
-	
+
 	@Autowired
 	private BankConfigApi bankConfigApi;
-	
+
 	@Autowired
 	private OAuthTokenUtill authTokenUtill;
-		
+
 	@Autowired
 	private MessageSource messageSource; 
-	
-//	@Value("${jwt.http.request.header}")
-//	private String tokenHeader;
-	
-//	@Value("${ldap.auth}")
-//	private boolean ldapAuth;
-	
+
+	//	@Value("${jwt.http.request.header}")
+	//	private String tokenHeader;
+
+	//	@Value("${ldap.auth}")
+	//	private boolean ldapAuth;
+
 	@SuppressWarnings("unchecked")
-	//@PostMapping(value = "${oauth2.get.token.uri}")
-	@PostMapping("/oauth/token")
+	@PostMapping(value = "${spring.security.oauth2.get.token-uri}")
 	@ApiOperation(value = "Generate JWT Tokens For Login.", notes = "Also returns a refresh token for retrieve new tokens")
 	public ResponseEntity<?> createAuthenticationToken(HttpServletRequest request,
 			@ApiParam("All Fields to be obtained. Cannot be empty.") 
-			@Valid @RequestParam("username") String username ,
-			@RequestParam("password") String password,
-			@RequestParam("branchId") Long branchId)
-					throws Exception { //@RequestBody JwtTokenRequest authenticationRequest
+	@Valid @RequestParam("username") String username ,
+	@RequestParam("password") String password,
+	@RequestParam("branchId") Long branchId) throws Exception { 
 
 		String remoteAddr = "";
 		if (request != null) {
@@ -98,36 +98,34 @@ public class AuthorizationController {
 			}
 		}
 		logger.info("=====>> Login Request Comming From :: "+remoteAddr);
-//		if(ldapAuth) {
-//			try {
-//				authenticate(authenticationRequest.getUsername(), new String(Base64.getDecoder().decode(authenticationRequest.getPassword()),StandardCharsets.UTF_8));
-//			}catch(Exception e) {
-//				throw new AuthenticationException(messageSource.getMessage("13", null, LocaleContextHolder.getLocale()), e);
-//			}
-//		}
-		
+		//		if(ldapAuth) {
+		//			try {
+		//				authenticate(authenticationRequest.getUsername(), new String(Base64.getDecoder().decode(authenticationRequest.getPassword()),StandardCharsets.UTF_8));
+		//			}catch(Exception e) {
+		//				throw new AuthenticationException(messageSource.getMessage("13", null, LocaleContextHolder.getLocale()), e);
+		//			}
+		//		}
+
 		BranchDetailsRecord branInfo = bankConfigApi.getBranchDetails(branchId, null);
 
-		
-		final HashMap<String, Object> userDetailsMap = iAuthService.loadUserByUsername(username,
-				branchId);
+		final HashMap<String, Object> userDetailsMap = iAuthService.loadUserByUsername(username,branchId);
 
 		if(userDetailsMap!=null && userDetailsMap.containsKey("user") && userDetailsMap.containsKey("userRoles")) {
-			
+
 			List<UserRoles> userRoles = (List<UserRoles>) userDetailsMap.get("userRoles");
-			
+
 			List<String> roles = Optional.ofNullable(userRoles)
-			        .orElse(Collections.emptyList())
-			        .stream()
-			        .map(role -> role.getMasRole().getRoleCode())
-			        .collect(Collectors.toList());
-			
+					.orElse(Collections.emptyList())
+					.stream()
+					.map(role -> role.getMasRole().getRoleCode())
+					.collect(Collectors.toList());
+
 			boolean hasAccess = userRoles.stream()
-			        .anyMatch(role -> role.getBranchId().equals(branInfo.branchId()));
+					.anyMatch(role -> role.getBranchId().equals(branInfo.branchId()));
 
 			final String sBranchName = hasAccess ? branInfo.branchName() : null;
 			final String sBranchType = hasAccess ? branInfo.branchType() : null;
-			
+
 			logger.info("Branch Access → ID: {}, Name: {}, Type: {}", branInfo.branchId(), sBranchName, sBranchType);
 
 			final String token = authTokenUtill.generateAccessToken((Users)userDetailsMap.get("user"),roles,branchId,sBranchName,sBranchType,"access");		
@@ -137,20 +135,19 @@ public class AuthorizationController {
 			userLog.put("ipAddress", remoteAddr);
 			userLog.put("refreshToken", refreshToken);
 			userLog.put("type", "access");
-			//LocalDateTime lastLoggedInTime=iAuthService.addUserLog(userLog);
-			LocalDateTime lastLoggedInTime = LocalDateTime.now();
+			LocalDateTime lastLoggedInTime=iAuthService.addUserLog(userLog);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new JwtTokenResponse(token, refreshToken, ((Users)userDetailsMap.get("user")).getUsername(),sBranchName, ((Users)userDetailsMap.get("user")).getLoginName(),lastLoggedInTime));
 		}else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false,messageSource.getMessage("6", null, LocaleContextHolder.getLocale())));
 		}
 	}
 
-	
-	@PostMapping(value = "/oauth/refresh", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+
+	@PostMapping(value = "${spring.security.oauth2.refresh.token-uri}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	@ApiOperation(value = "Generate Refresh Tokens For Login.", notes = " Returns Access and Refresh token..")
 	public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request,
 			@ApiParam("refreshToken Field to be obtained. Cannot be empty.") 
-			@Valid @RequestParam("refreshToken") String refToken) throws Exception {
+	@Valid @RequestParam("refreshToken") String refToken) throws Exception {
 
 		String remoteAddr = "";
 		if (request != null) {
@@ -166,12 +163,12 @@ public class AuthorizationController {
 
 			try {
 				isTokenExpired = authTokenUtill.isTokenExpired(token);
-				
+
 			} catch (IllegalArgumentException  e) {
 				isTokenExpired=true;
 				throw new AuthenticationException(messageSource.getMessage("10", null, LocaleContextHolder.getLocale()), e);
 			} 
-			
+
 			if(!isTokenExpired) {
 
 				ClaimsData claimsData = authTokenUtill.parseToken(token);
@@ -196,7 +193,7 @@ public class AuthorizationController {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false,messageSource.getMessage("10", null, LocaleContextHolder.getLocale())));
 	}
 
-	
+
 	private void authenticate(String username, String password) {
 		Objects.requireNonNull(username);
 		Objects.requireNonNull(password);
@@ -209,7 +206,7 @@ public class AuthorizationController {
 			throw new AuthenticationException(messageSource.getMessage("9", null, LocaleContextHolder.getLocale()), e);
 		}
 	}
-	
+
 	@GetMapping(value = "/getMenus")
 	@ApiOperation(value = "Get Menu List", notes = " Get Menu List According to Login User.")
 	ResponseEntity<?> getMenus(){
@@ -217,17 +214,17 @@ public class AuthorizationController {
 		List<String> roles= new ArrayList<String>();
 		return ResponseEntity.ok(iAuthService.getMenus(roles));
 	}
-	
-	@PostMapping(value = "logout")//${jwt.logout.token.uri}
+
+	@PostMapping(value = "${spring.security.oauth2.logout.token-uri}")
 	@ApiOperation(value = "LogOut Request.", notes = " Also Destroyed the refresh token..")
 	ResponseEntity<?> logout(
 			@ApiParam("refreshToken Field to be obtained. Cannot be empty.") 
-			@Valid @RequestParam("refreshToken") String refreshToken){
-		boolean result= iAuthService.logout(refreshToken);
+			@Valid @RequestParam("user-id") Long userId){
+		boolean result= iAuthService.markLogout(userId);
 		if(result)
 			return ResponseEntity.ok(new ApiResponse(result,messageSource.getMessage("8", null, LocaleContextHolder.getLocale())));
 		else
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse(false,messageSource.getMessage("2", null, LocaleContextHolder.getLocale())));
 	}
-	
+
 }

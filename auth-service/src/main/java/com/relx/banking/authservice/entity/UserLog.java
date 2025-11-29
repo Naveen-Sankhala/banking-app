@@ -15,7 +15,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -25,7 +25,10 @@ import lombok.Data;
  */
 @Hidden
 @Entity
-@Table(name="USER_LOG")
+@Table(name="USER_LOG" ,indexes = { 
+		@Index(name = "idx_user_log_refresh_token", columnList = "refresh_token"),
+		@Index(name = "idx_user_log_userid", columnList = "user_id") 
+		})
 @Data
 public class UserLog implements Serializable {
 	
@@ -39,20 +42,19 @@ public class UserLog implements Serializable {
 	
 	@JsonIgnore
     @NotNull
-    @Column(name="User_Id", length = 10)
+    @Column(name="User_Id")
     private Long userId;
     
     @NotNull
-    @Column(name="Ip_Address", length = 15)
+    @Column(name="Ip_Address")
     private String ipAddress;
     
     @NotNull
     @Column(name="Is_Logged_In")
-    private Character isLoggedIn;
+    private Boolean isLoggedIn;
     
     @JsonIgnore
-    @Lob
-    @Column(name="Refresh_Token")
+    @Column(name="Refresh_Token", columnDefinition = "TEXT")
     private String refreshToken;
     
     @CreationTimestamp
@@ -63,6 +65,16 @@ public class UserLog implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     @Column(name="Logged_Out_Time")
 	private LocalDateTime loggedOutTime;
+    
+    @JsonIgnore
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    @Column(name = "Created_At", updatable = false) 
+    private LocalDateTime createdAt = LocalDateTime.now();
+    
+    @JsonIgnore
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    @Column(name = "Updated_At") 
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
 
 }

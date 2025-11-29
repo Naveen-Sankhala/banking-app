@@ -39,8 +39,14 @@ public class AppConfig implements Serializable {
 	@Value("${spring.security.oauth2.authorization-uri}")
 	private String authorizationToken;
 	
-	@Value("${spring.security.oauth2.token-uri}")
+	@Value("${spring.security.oauth2.get.token-uri}")
 	private String accessToken;
+	
+	@Value("${spring.security.oauth2.refresh.token-uri}")
+	private String refreshToken;
+	
+	@Value("${spring.security.oauth2.logout.token-uri}")
+	private String logout;
 	
 	@Value("${spring.security.oauth2.token-expiration}")
 	private Instant tokenExpiration;
@@ -48,11 +54,17 @@ public class AppConfig implements Serializable {
 	@Value("${spring.security.oauth2.refreshToken-expiration}")
 	private Instant refreshTokenExpiration;
 	
-//	@Value("${corss.url}")
-//	private String corssUrl;
-//	
-//	@Value("${corss.url}")
-//	private String corssUrl;
+	@Value("${spring.security.oauth2.read-scope}")
+	private String readScope;
+	
+	@Value("${spring.security.oauth2.write-scope}")
+	private String writeScope;	
+	
+	@Value("${spring.security.oauth2.openid-scope}")
+	private String openIdScope;
+	
+	@Value("${spring.security.oauth2.profile-scope}")
+	private String profileScope;	
 	
 
 }

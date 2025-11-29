@@ -21,7 +21,7 @@ public interface IAuthorizationService {
 
 	boolean isRefreshTokenExists(String remoteAddr, long userId, String token);
 
-	boolean logout(String refreshToken);
+	boolean markLogout(Long userId);
 
 	Users loadUserByUsername(String username);
 

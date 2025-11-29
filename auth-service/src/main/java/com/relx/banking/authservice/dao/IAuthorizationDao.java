@@ -3,7 +3,6 @@ package com.relx.banking.authservice.dao;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ public interface IAuthorizationDao {
 
 	boolean isRefreshTokenExists(String remoteAddr, long userId, String token);
 
-	boolean logout(String refreshToken);
+	boolean markLogout(Long userId, LocalDateTime logoutTime);
 
 	Users loadUserByUsername(String username);
 

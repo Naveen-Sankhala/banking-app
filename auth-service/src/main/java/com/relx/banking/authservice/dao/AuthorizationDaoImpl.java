@@ -17,8 +17,7 @@ import com.relx.banking.authservice.repository.UsersRepository;
 import com.relx.banking.authservice.util.EntityNotFoundException;
 import com.relx.banking.authservice.util.UsernameNotFoundException;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 
 /**
  * @author Naveen.Sankhala
@@ -70,6 +69,7 @@ public class AuthorizationDaoImpl implements IAuthorizationDao {
 	}
 
 	@Override
+	@Transactional
 	public boolean saveAndFlushUserLogs(UserLog userLogs) {
 		return userLogRepo.saveAndFlush(userLogs) != null;
 	}
@@ -81,6 +81,7 @@ public class AuthorizationDaoImpl implements IAuthorizationDao {
 	
 
 	@Override
+	@Transactional
 	public boolean isRefreshTokenExists(String remoteAddr, long userId, String token) {
 		
 		//Optional<UserLog> findFirst = userLogJpaRepo.findByIpAddressAndUserIdAndRefreshToken(remoteAddr,userId,token).stream()
@@ -95,13 +96,19 @@ public class AuthorizationDaoImpl implements IAuthorizationDao {
 		return false;
 	}
 
+	
+	@Transactional
 	@Override
-	public boolean logout(String refreshToken) {
-		UserLog userLogs = userLogRepo.findByRefreshToken(refreshToken);
-		userLogs.setRefreshToken(null);
-		userLogs.setIsLoggedIn('N');;
-		userLogs.setLoggedOutTime(LocalDateTime.now());
-		return userLogRepo.save(userLogs) != null;
+	public boolean markLogout(Long userId, LocalDateTime logoutTime) {
+		return userLogRepo.findLatestByUserId(userId)
+		.map(userLogs -> { 
+			userLogs.setIsLoggedIn(Boolean.FALSE);
+			userLogs.setRefreshToken(null);
+			userLogs.setLoggedOutTime(logoutTime == null ? LocalDateTime.now() : logoutTime);
+			userLogRepo.save(userLogs);
+			return true;
+		})
+		.orElse(false); 
 	}
 
 	@Override

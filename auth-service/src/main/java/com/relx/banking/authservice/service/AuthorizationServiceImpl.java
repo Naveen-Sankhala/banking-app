@@ -15,7 +15,6 @@ import com.relx.banking.authservice.entity.Users;
 import com.relx.banking.authservice.util.AuthenticationException;
 import com.relx.banking.authservice.util.EntityNotFoundException;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -51,7 +50,6 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
 //	}
 
 	@Override
-	@Transactional
 	public LocalDateTime addUserLog(HashMap<String, Object> userLog) {
 
 		UserLog userLogs=null;
@@ -63,6 +61,7 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
 				throw new EntityNotFoundException(UserLog.class, "UserId", String.valueOf((Long)userLog.get("userId")));
 			}
 			userLogs=findFirst.get();
+			userLogs.setUpdatedAt(LocalDateTime.now());
 		}
 		else {
 			userLogs=new UserLog();
@@ -73,7 +72,7 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
 			if(userLog.containsKey("ipAddress"))
 				userLogs.setIpAddress((String) userLog.get("ipAddress"));
 
-			userLogs.setIsLoggedIn('Y');
+			userLogs.setIsLoggedIn(Boolean.TRUE);
 		}
 
 		if(userLog.containsKey("refreshToken"))
@@ -98,8 +97,8 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
 	}
 
 	@Override
-	public boolean logout(String refreshToken) {
-		return iAuthorizationDao.logout(refreshToken);
+	public boolean markLogout(Long userId) {
+		return iAuthorizationDao.markLogout(userId, LocalDateTime.now()) ;
 	}
 
 	@Override

@@ -1,12 +1,10 @@
-package com.relx.banking.authservice.config;
+package com.relx.banking.authservice.oauth2;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
+import com.relx.banking.authservice.config.AppConfig;
 
 import lombok.RequiredArgsConstructor;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -38,10 +36,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthorizationServerConfig {
 
-	private final static Logger logger = LoggerFactory.getLogger(AuthorizationServerConfig.class);
+	final private AppConfig appConfig;
 
-
-	// 1) Main security filter chain for the Authorization Server (exposes endpoints)
+	/**
+	 *	 1) Main security filter chain for the Authorization Server (exposes endpoints)
+	 */
+	@SuppressWarnings("removal")
 	@Bean
 	public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http) throws Exception {
 		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
@@ -50,25 +50,32 @@ public class AuthorizationServerConfig {
 		return http.build();
 	}
 
-	// 2) Provider settings (issuer URL)
+
+	/**
+	 * 2) Provider settings (issuer URL)
+	 */
 	@Bean
 	@Order(1)
 	public AuthorizationServerSettings authorizationServerSettings() {
 		return AuthorizationServerSettings.builder()
-				.issuer("http://localhost:9003")   // adjust for prod HTTPS URL
+				.issuer(appConfig.getAuthorizationServerIssuer()+"/Auth")   // adjust for prod HTTPS URL
 				.build();
 	}
 
-	// 3) Registered clients (in-memory). Add clients as needed.
+
+	/**
+	 * 3) Registered clients (in-memory). Add clients as needed.
+	 */
 	@Bean
 	public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
+		
 		RegisteredClient clientCredentialsClient = RegisteredClient.withId(UUID.randomUUID().toString())
 				.clientId("bank-client")
 				.clientSecret(passwordEncoder.encode("secret"))
 				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
 				.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-				.scope("bank.read")
-				.scope("bank.write")
+				.scope(appConfig.getReadScope())
+				.scope(appConfig.getWriteScope())
 				.tokenSettings(TokenSettings.builder()
 						.accessTokenTimeToLive(Duration.ofHours(1))
 						.build())
@@ -80,10 +87,10 @@ public class AuthorizationServerConfig {
 				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
 				.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
 				.authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-				.redirectUri("http://localhost:8080/login/oauth2/code/bank-web") // adapt to your client
-				.scope("openid")
-				.scope("profile")
-				.scope("bank.read")
+				.redirectUri("http://localhost:9003/Auth/login/oauth2/code/bank-web") // adapt to your client
+				.scope(appConfig.getOpenIdScope())
+				.scope(appConfig.getProfileScope())
+				.scope(appConfig.getReadScope())
 				.tokenSettings(TokenSettings.builder()
 						.accessTokenTimeToLive(Duration.ofHours(1))
 						.refreshTokenTimeToLive(Duration.ofDays(30))
@@ -93,15 +100,18 @@ public class AuthorizationServerConfig {
 		return new InMemoryRegisteredClientRepository(clientCredentialsClient, authCodeClient);
 	}
 
-	// 4) JWK source (RSA key pair) used by the Authorization Server to sign JWTs.
-	//    Exposes jwk set at /oauth2/jwks (or /.well-known/jwks.json depending on config)
-	//  Persist in prod. ----
+	/**
+	 * 4) JWK source (RSA key pair) used by the Authorization Server to sign JWTs.
+	 *    Exposes jwk set at /oauth2/jwks (or /.well-known/jwks.json depending on config)
+	 */
 	@Bean
 	public JWKSet jwkSet(RSAKey rsaKey) {
 		return new JWKSet(rsaKey);
 	}
 
-	// Helper to create RSAKey (using Nimbus RSAKey builder)
+	/**
+	 * Helper to create RSAKey (using Nimbus RSAKey builder)
+	 */
 	@Bean
 	public RSAKey rsaKey() {
 		try {
@@ -120,22 +130,12 @@ public class AuthorizationServerConfig {
 		}
 	}
 
-	// 5) Password encoder - for demo we use delegating encoder; you can change to BCrypt
+	/**
+	 * 5) Password encoder - for demo we use delegating encoder; you can change to BCrypt
+	 */
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-
-	// 6) Simple in-memory user (for Authorization Code / login flows)
-	// @Bean
-	//	public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
-	//		var user = org.springframework.security.core.userdetails.User.withUsername("naveen")
-	//				.password(passwordEncoder.encode("pass"))
-	//				.roles("USER")
-	//				.build();
-	//		logger.info("User Info :: "+user.toString() );
-	//		return new InMemoryUserDetailsManager(user);
-	//	}
-
 
 }

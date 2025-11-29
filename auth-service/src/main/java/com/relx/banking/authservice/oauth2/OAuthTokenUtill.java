@@ -3,13 +3,13 @@ package com.relx.banking.authservice.oauth2;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.*;
 import com.nimbusds.jwt.*;
+import com.relx.banking.authservice.config.AppConfig;
 import com.relx.banking.authservice.entity.Users;
 import com.relx.banking.authservice.util.AuthenticationException;
 import com.nimbusds.jose.jwk.RSAKey;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
 
@@ -29,21 +29,13 @@ public class OAuthTokenUtill {
 	private final static Logger logger = LoggerFactory.getLogger(OAuthTokenUtill.class);
 
 	private final RSAKey rsaKey;
+	private final AppConfig appConfig;
 	
-	public OAuthTokenUtill(RSAKey rsaKey) {
+	public OAuthTokenUtill(RSAKey rsaKey,AppConfig appConfig) {
 		this.rsaKey = rsaKey;
+		this.appConfig = appConfig;
 	}
 
-	@Value("${spring.security.oauth2.authorizationserver.issuer}")
-	private String issuer;
-	
-	@Value("${spring.security.oauth2.token-expiration}")
-	private Long expiration;
-
-	@Value("${spring.security.oauth2.refreshToken-expiration}")
-	private Long refTokenExpiration;
-
-	
 
 	public String getUsernameFromToken(String token) {
 		return getClaimFromToken(token, JWTClaimsSet ::getSubject);
@@ -68,7 +60,6 @@ public class OAuthTokenUtill {
 			claims = getAllClaimsFromToken(token);
 		} catch (ParseException | JOSEException e) {
 			logger.error("Invalid Token");
-			//e.printStackTrace();
 		}
 		return claimsResolver.apply(claims);
 	}
@@ -101,7 +92,7 @@ public class OAuthTokenUtill {
 			// Create JWT claims
 			JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
 					.subject(users.getUsername())
-					.issuer("http://localhost:9003/Auth")
+					.issuer(appConfig.getAuthorizationServerIssuer()+"/Auth")
 					.issueTime(Date.from(now))
 					.expirationTime(expirationDate) 
 					.claim("BranchType",sBranchType)
@@ -110,7 +101,7 @@ public class OAuthTokenUtill {
 					.claim("UserName",users.getLoginName())
 					.claim("UserId",users.getUserId())
 					.claim("Roles",roles)
-					.claim("scope", List.of("bank.read", "bank.write"))
+					.claim("scope", List.of(appConfig.getReadScope(), appConfig.getWriteScope()))
 					.claim("TokenType", sTokenType)
 					.build();
 
@@ -142,10 +133,10 @@ public class OAuthTokenUtill {
 
 		JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder(oldClaims)
 				.subject(oldClaims.getSubject())
-				.issuer("http://localhost:9003/Auth") 
+				.issuer(appConfig.getAuthorizationServerIssuer()+"/Auth") 
 				.issueTime(Date.from(now))
 				.expirationTime(expirationDate)  //Date.from(Instant.now().plus(Duration.ofMinutes(10)))
-				.claim("scope", List.of("bank.read", "bank.write"))
+				.claim("scope", List.of(appConfig.getReadScope(), appConfig.getWriteScope()))
 				.claim("TokenType", sTokenType)
 				.build();
 
@@ -187,17 +178,12 @@ public class OAuthTokenUtill {
 	
 	private Date calculateExpirationDate(Instant now, String sTokenType) {
 		if(sTokenType.equalsIgnoreCase("access")) {
-			//System.out.println("createdDate access "+ Date.from(now));
 			Date accessDate = Date.from(now.plus(Duration.ofMinutes(5)));
 			//Date accessDate = new Date(createdDate.getTime() + expiration * 1000);
-			System.out.println("test access "+accessDate );
 			return accessDate;
 		}
 		else {
-			//System.out.println("createdDate refresh "+Date.from(now));
 			Date refreshDate = Date.from(now.plus(Duration.ofMinutes(10)));
-			//Date refreshDate = new Date(createdDate.getTime() + refTokenExpiration * 1000);
-			System.out.println("test refresh "+refreshDate );
 			return refreshDate;
 		}
 	}

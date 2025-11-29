@@ -63,14 +63,19 @@ values (3,'DBA001003','Database','Y','dba@gmail.com',1,NOW(),1,NOW());
 
 CREATE TABLE USER_LOG(
 	UserLog_Id     		BIGSERIAL PRIMARY KEY,
-	User_Id            	BIGINT UNIQUE NOT NULL,
-	Ip_Address         	VARCHAR(15) NOT NULL,
-	Is_Logged_In        VARCHAR(1) DEFAULT 'N' NOT NULL,
+	User_Id            	BIGINT NOT NULL,
+	Ip_Address         	VARCHAR(50) NOT NULL,
+	Is_Logged_In        BOOLEAN DEFAULT FALSE,
 	Refresh_Token		TEXT,
-	Logged_In_Time      	TIMESTAMP WITH TIME ZONE DEFAULT now(),
-	Logged_Out_Time     	TIMESTAMP WITH TIME ZONE DEFAULT now(),
+	Logged_In_Time      TIMESTAMP DEFAULT now(),
+	Logged_Out_Time     TIMESTAMP,
+	Created_At 			TIMESTAMP DEFAULT now(),
+	Updated_At 			TIMESTAMP DEFAULT now(),
 	CONSTRAINT FK_UserLog FOREIGN KEY (User_Id) REFERENCES USERS(User_Id)
 );
+
+CREATE INDEX IF NOT EXISTS idx_user_log_refresh_token ON user_log (refresh_token);
+CREATE INDEX IF NOT EXISTS idx_user_log_userid ON user_log (user_id);
 
 SELECT sequence_schema, sequence_name FROM information_schema.sequences ORDER BY sequence_schema, sequence_name;
 

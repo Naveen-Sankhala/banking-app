@@ -3,6 +3,7 @@ package com.relx.banking.authservice.repository;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,11 +19,13 @@ import com.relx.banking.authservice.entity.UserLog;
 public interface UserLogRepository extends JpaRepository<UserLog, Long> {
 
 	List<UserLog> findByUserIdOrderByUserLogIdDesc(Long userId);
+	
+	List<UserLog> findByUserIdOrderByLoggedInTimeDesc(Long userId);
 
 	@Query("Select a from UserLog a where a.ipAddress=:remoteAddr and a.userId=:userId and TO_CHAR(a.refreshToken)=:token")
 	Collection<UserLog> findByIpAddressAndUserIdAndRefreshToken(String remoteAddr, long userId, String token);
 
-	@Query("Select a from UserLog a where TO_CHAR(a.refreshToken)=:refreshToken")
+	@Query("Select a from UserLog a where a.refreshToken = :refreshToken")
 	UserLog findByRefreshToken(String refreshToken);
 
 	@Query(value="select ISLOGGEDIN from USER_LOG where USERLOG_ID=(select max(USERLOG_ID) from USER_LOG a inner join users B on a.USER_ID=B.USER_ID and B.USER_NAME=:username )",nativeQuery = true)
@@ -33,6 +36,13 @@ public interface UserLogRepository extends JpaRepository<UserLog, Long> {
 	
 	@Query("select max(loggedInTime) from UserLog where loggedInTime not in (select max(loggedInTime) from UserLog where userId=:userId GROUP by userId) and userId=:userId ")
 	LocalDateTime getLastLoggedInTime(long userId);
+	
+	default Optional<UserLog> findLatestByUserId(Long userId) {
+		return findByUserIdOrderByLoggedInTimeDesc(userId)
+				.stream().findFirst(); 
+	}
+
+	
 
 
 }
