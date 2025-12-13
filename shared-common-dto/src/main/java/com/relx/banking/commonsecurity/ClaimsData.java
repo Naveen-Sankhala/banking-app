@@ -1,4 +1,4 @@
-package com.relx.banking.authservice.oauth2;
+package com.relx.banking.commonsecurity;
 
 import java.io.Serializable;
 import java.util.List;

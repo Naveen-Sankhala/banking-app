@@ -6,6 +6,7 @@ import com.nimbusds.jwt.*;
 import com.relx.banking.authservice.config.AppConfig;
 import com.relx.banking.authservice.entity.Users;
 import com.relx.banking.authservice.util.AuthenticationException;
+import com.relx.banking.commonsecurity.ClaimsData;
 import com.nimbusds.jose.jwk.RSAKey;
 
 import org.slf4j.Logger;
@@ -25,13 +26,13 @@ import java.util.function.Function;
  * Nov 19, 2025
  */
 @Service
-public class OAuthTokenUtill {
-	private final static Logger logger = LoggerFactory.getLogger(OAuthTokenUtill.class);
+public class OAuth2TokenUtil {
+	private final static Logger logger = LoggerFactory.getLogger(OAuth2TokenUtil.class);
 
 	private final RSAKey rsaKey;
 	private final AppConfig appConfig;
 	
-	public OAuthTokenUtill(RSAKey rsaKey,AppConfig appConfig) {
+	public OAuth2TokenUtil(RSAKey rsaKey,AppConfig appConfig) {
 		this.rsaKey = rsaKey;
 		this.appConfig = appConfig;
 	}
@@ -80,6 +81,10 @@ public class OAuthTokenUtill {
 	    return jwt.verify(verifier);
 	}
 
+	public Boolean validateToken(String token, ClaimsData claimsData) {
+		final String username = getUsernameFromToken(token);
+		return (username.equals(claimsData.getUserName()) && !isTokenExpired(token));
+	}
 
 	public String generateAccessToken(Users users, List<String> roles, long branchId, String sBranchName, String sBranchType, String sTokenType) {
 		try {
@@ -155,7 +160,7 @@ public class OAuthTokenUtill {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public ClaimsData parseToken(String token) throws ParseException, JOSEException {
+	public ClaimsData parseToken(String token) {
 		try {
 			JWTClaimsSet body = getAllClaimsFromToken(token);
 
@@ -171,19 +176,20 @@ public class OAuthTokenUtill {
 
 			return claimsData;
 
-		} catch (JwtException | ClassCastException e) {
+		} catch (JwtException | ClassCastException | ParseException | JOSEException e) {
+			logger.error("Getting Exception Token Parsing ::: "+e.getMessage());
 			return null;
 		}
 	}
 	
 	private Date calculateExpirationDate(Instant now, String sTokenType) {
 		if(sTokenType.equalsIgnoreCase("access")) {
-			Date accessDate = Date.from(now.plus(Duration.ofMinutes(5)));
+			Date accessDate = Date.from(now.plus(Duration.ofHours(5)));//Duration.ofMinutes(5)  
 			//Date accessDate = new Date(createdDate.getTime() + expiration * 1000);
 			return accessDate;
 		}
 		else {
-			Date refreshDate = Date.from(now.plus(Duration.ofMinutes(10)));
+			Date refreshDate = Date.from(now.plus(Duration.ofDays(30)));//Duration.ofMinutes(10)
 			return refreshDate;
 		}
 	}

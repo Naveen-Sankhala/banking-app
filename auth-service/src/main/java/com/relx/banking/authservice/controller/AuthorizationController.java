@@ -22,6 +22,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,13 +33,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.relx.banking.authservice.client.BankConfigApi;
 import com.relx.banking.authservice.entity.UserRoles;
 import com.relx.banking.authservice.entity.Users;
-import com.relx.banking.authservice.oauth2.ClaimsData;
-import com.relx.banking.authservice.oauth2.JwtTokenResponse;
-import com.relx.banking.authservice.oauth2.OAuthTokenUtill;
+import com.relx.banking.authservice.oauth2.OAuth2TokenUtil;
 import com.relx.banking.authservice.service.IAuthorizationService;
 import com.relx.banking.authservice.util.ApiResponse;
 import com.relx.banking.authservice.util.AuthenticationException;
 import com.relx.banking.commonrecord.BranchDetailsRecord;
+import com.relx.banking.commonsecurity.ClaimsData;
+import com.relx.banking.commonsecurity.JwtTokenResponse;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -70,7 +71,7 @@ public class AuthorizationController {
 	private BankConfigApi bankConfigApi;
 
 	@Autowired
-	private OAuthTokenUtill authTokenUtill;
+	private OAuth2TokenUtil authTokenUtill;
 
 	@Autowired
 	private MessageSource messageSource; 
@@ -106,7 +107,7 @@ public class AuthorizationController {
 		//			}
 		//		}
 
-		BranchDetailsRecord branInfo = bankConfigApi.getBranchDetails(branchId, null);
+		//BranchDetailsRecord branInfo = bankConfigApi.getBranchDetails(branchId, null);
 
 		final HashMap<String, Object> userDetailsMap = iAuthService.loadUserByUsername(username,branchId);
 
@@ -121,12 +122,12 @@ public class AuthorizationController {
 					.collect(Collectors.toList());
 
 			boolean hasAccess = userRoles.stream()
-					.anyMatch(role -> role.getBranchId().equals(branInfo.branchId()));
+					.anyMatch(role -> role.getBranchId().equals(1));
 
-			final String sBranchName = hasAccess ? branInfo.branchName() : null;
-			final String sBranchType = hasAccess ? branInfo.branchType() : null;
+			final String sBranchName = hasAccess ? "branInfo.branchName()" : null;
+			final String sBranchType = hasAccess ? "branInfo.branchType()" : null;
 
-			logger.info("Branch Access → ID: {}, Name: {}, Type: {}", branInfo.branchId(), sBranchName, sBranchType);
+			logger.info("Branch Access → ID: {}, Name: {}, Type: {}",1 , sBranchName, sBranchType);//branInfo.branchId()
 
 			final String token = authTokenUtill.generateAccessToken((Users)userDetailsMap.get("user"),roles,branchId,sBranchName,sBranchType,"access");		
 			final String refreshToken = authTokenUtill.generateAccessToken((Users)userDetailsMap.get("user"),roles,branchId,sBranchName,sBranchType,"refresh");
@@ -215,7 +216,7 @@ public class AuthorizationController {
 		return ResponseEntity.ok(iAuthService.getMenus(roles));
 	}
 
-	@PostMapping(value = "${spring.security.oauth2.logout.token-uri}")
+	@DeleteMapping(value = "${spring.security.oauth2.logout.token-uri}")
 	@ApiOperation(value = "LogOut Request.", notes = " Also Destroyed the refresh token..")
 	ResponseEntity<?> logout(
 			@ApiParam("refreshToken Field to be obtained. Cannot be empty.") 

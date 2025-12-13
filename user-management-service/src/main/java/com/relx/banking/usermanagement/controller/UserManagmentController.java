@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +27,7 @@ import com.relx.banking.usermanagement.util.exception.ApiResponse;
  */
 @RestController
 @RequestMapping
-@CrossOrigin(origins = "${corss.url}")
+//@CrossOrigin(origins = "${corss.url}")
 //@Tag(name = "authorization-controller", description = "Set of endpoints for Login in Application.")
 public class UserManagmentController {
 
@@ -56,5 +57,15 @@ public class UserManagmentController {
 	}
 	
 	
+	@GetMapping
+	ResponseEntity<?> getAuthority(@RequestParam("user-id")Long userId,@RequestParam("branch-id")Long barnchId){
+		final HashMap<String, Object> userAuthority = iUserManagmentService.getAuthority(userId,barnchId);
+		
+		if(userAuthority!=null) {
+			return ResponseEntity.status(HttpStatus.FOUND).body(userAuthority);
+		}else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false,messageSource.getMessage("6", null, LocaleContextHolder.getLocale())));
+		}
+	} 
 
 }

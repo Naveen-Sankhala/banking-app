@@ -179,6 +179,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>user-management-service</finalName>
 	</build>
 
 </project>

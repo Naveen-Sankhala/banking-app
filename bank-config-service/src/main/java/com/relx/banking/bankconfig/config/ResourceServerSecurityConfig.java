@@ -2,6 +2,9 @@ package com.relx.banking.bankconfig.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 //import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 //import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
@@ -13,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  */
 
 @Configuration
-//@EnableWebSecurity
+@EnableWebSecurity
 public class ResourceServerSecurityConfig {
 	
 //	@Bean
@@ -27,5 +30,23 @@ public class ResourceServerSecurityConfig {
 //        //  .oauth2ResourceServer(oauth2 -> oauth2.jwt());
 //        return http.build();
 //    }
+	/*
+	@Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/config/branch/").permitAll()
+                .anyRequest().authenticated()
+            )
+            .oauth2ResourceServer(oauth2 ->
+                oauth2.jwt(jwt ->
+                    jwt.jwkSetUri("http://localhost:9003/Auth/oauth2/jwks")
+                )
+            );
+
+        return http.build();
+    }
+*/
 }
