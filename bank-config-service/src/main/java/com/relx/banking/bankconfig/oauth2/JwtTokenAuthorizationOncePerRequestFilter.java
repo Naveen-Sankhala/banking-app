@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.hibernate.annotations.Comment;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,8 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.relx.banking.bankconfig.client.UserManagmentApi;
+import com.relx.banking.commonsecurity.Auth2TokenUtil;
 import com.relx.banking.commonsecurity.ClaimsData;
-import com.relx.banking.security.Auth2TokenUtil;
 import com.relx.banking.util.exception.AuthenticationException;
 
 import jakarta.servlet.FilterChain;
