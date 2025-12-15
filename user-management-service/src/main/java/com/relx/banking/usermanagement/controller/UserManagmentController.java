@@ -26,7 +26,7 @@ import com.relx.banking.usermanagement.util.exception.ApiResponse;
  * Nov 26,2025
  */
 @RestController
-@RequestMapping
+@RequestMapping("")
 //@CrossOrigin(origins = "${corss.url}")
 //@Tag(name = "authorization-controller", description = "Set of endpoints for Login in Application.")
 public class UserManagmentController {
@@ -45,6 +45,7 @@ public class UserManagmentController {
 		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
 	}
 	
+	@GetMapping("users")
 	public ResponseEntity<?> findUser(@RequestParam("user-name")String userName,@RequestParam("branchId")Long branchId){
 		logger.info("=====>> Login Request Comming From :: ");
 		final HashMap<String, Object> userDetailsMap = iUserManagmentService.loadUserByUsername(userName,branchId);
@@ -57,12 +58,12 @@ public class UserManagmentController {
 	}
 	
 	
-	@GetMapping
+	@GetMapping("authority")
 	ResponseEntity<?> getAuthority(@RequestParam("user-id")Long userId,@RequestParam("branch-id")Long barnchId){
 		final HashMap<String, Object> userAuthority = iUserManagmentService.getAuthority(userId,barnchId);
 		
 		if(userAuthority!=null) {
-			return ResponseEntity.status(HttpStatus.FOUND).body(userAuthority);
+			return ResponseEntity.status(HttpStatus.OK).body(userAuthority);
 		}else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false,messageSource.getMessage("6", null, LocaleContextHolder.getLocale())));
 		}

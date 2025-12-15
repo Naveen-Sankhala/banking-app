@@ -8,15 +8,22 @@ spring:
   name: bank-config-service
  profiles:
   active: dev
-# security:
-#  oauth2:
-#   resourceserver:
-#    jwt:
-#     issuer-uri: http://localhost:9003  # same as auth-service
-# 
+ security:
+  oauth2:
+   resourceserver:
+    issuer: http://localhost:9003
+   redirect-uri:
+   get.token-uri: /token
+   refresh.token-uri: /refresh
+   logout.token-uri: /logout
+
  rabbitmq:
   listener:
    simple:
-    auto-startup: false   # prevents listener from starting too early
+    auto-startup: false   # prevents listener from starting too early	
+
+logging:
+ level:
+  org.springframework.security: DEBUG
 
 

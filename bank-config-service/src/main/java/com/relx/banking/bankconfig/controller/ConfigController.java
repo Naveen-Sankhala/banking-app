@@ -58,7 +58,7 @@ public class ConfigController {
     }
 	
 	@GetMapping("bank-config")
-	public ResponseEntity<?> getCurrentBalanceOfAccount()throws Exception{
+	public ResponseEntity<?> getBankConfiguration()throws Exception{
 		return ResponseEntity.status(HttpStatus.OK).body(iConfigService.getBankConfiguration());
 	}
 	

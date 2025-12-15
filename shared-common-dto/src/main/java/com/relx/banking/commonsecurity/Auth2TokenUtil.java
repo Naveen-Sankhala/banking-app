@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.relx.banking.util.exception.AuthenticationException;
@@ -52,21 +54,21 @@ public class Auth2TokenUtil {
 
 	private static JWTClaimsSet getAllClaimsFromToken(String token) throws ParseException, JOSEException {
 		SignedJWT jwt = SignedJWT.parse(token);
-		ClaimsData claimsData = parseToken(token);
+		//ClaimsData claimsData = parseToken(token);
 
-		Boolean isVerify = validateToken(token,claimsData);
-		if(!isVerify)
-			throw new AuthenticationException("Invalid refresh token");
+//		Boolean isVerify = validateToken(token,claimsData);
+//		if(!isVerify)
+//			throw new AuthenticationException("Invalid refresh token");
 		
 		JWTClaimsSet claims = jwt.getJWTClaimsSet();
 		return claims;
 	}
-/*
-	private Boolean verifyToken(SignedJWT jwt) throws JOSEException {
-		JWSVerifier verifier = new RSASSAVerifier(rsaKey.toRSAPublicKey());
-	    return jwt.verify(verifier);
-	}
-*/
+
+//	private Boolean verifyToken(SignedJWT jwt) throws JOSEException {
+//		JWSVerifier verifier = new RSASSAVerifier(rsaKey.toRSAPublicKey());
+//	    return jwt.verify(verifier);
+//	}
+
 	
 	public static Boolean validateToken(String token, ClaimsData claimsData) {
 		final String username = getUsernameFromToken(token);
@@ -78,10 +80,9 @@ public class Auth2TokenUtil {
 		try {
 			JWTClaimsSet body = getAllClaimsFromToken(token);
 
-
 			ClaimsData claimsData = ClaimsData.builder()
 					.UserId(((Number)body.getClaim("UserId")).longValue())
-					.UserName((String) body.getClaim("UserName"))
+					.UserName((String) body.getClaim("sub"))
 					.LoginName((String) body.getClaim("UserName"))
 					.BranchId(((Number) body.getClaim("BranchId")).longValue())
 					.BranchName((String) body.getClaim("BranchName"))

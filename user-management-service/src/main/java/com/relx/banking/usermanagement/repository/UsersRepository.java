@@ -16,6 +16,8 @@ import com.relx.banking.usermanagement.entity.Users;
 @Repository
 public interface UsersRepository extends JpaRepository<Users, Long> {
 
+	Optional<Users> findByUsernameAndBranchId(String username,long branchId);
+	
 	Optional<Users> findByUsername(String username);
 
 }

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class UserManagmentDaoImpl implements IUserManagmentDao {
 	public HashMap<String, Object> loadUserByUsername(String username, Long branchId) throws UsernameNotFoundException {
 		HashMap<String, Object> userDetailsMap = new HashMap<String, Object>();
 		
-		Optional<Users> user = usersJpaRepo.findByUsername(username);
+		Optional<Users> user = usersJpaRepo.findByUsernameAndBranchId(username,branchId);
 
 		if (!user.isPresent()) {
 			throw new UsernameNotFoundException(String.format("USER_NOT_FOUND '%s'", username));
@@ -98,7 +99,7 @@ public class UserManagmentDaoImpl implements IUserManagmentDao {
 	public boolean logout(String refreshToken) {
 		UserLog userLogs = userLogRepo.findByRefreshToken(refreshToken);
 		userLogs.setRefreshToken(null);
-		userLogs.setIsLoggedIn('N');;
+		userLogs.setIsLoggedIn(false);;;
 		userLogs.setLoggedOutTime(LocalDateTime.now());
 		return userLogRepo.save(userLogs) != null;
 	}
@@ -115,12 +116,12 @@ public class UserManagmentDaoImpl implements IUserManagmentDao {
 	}
 	
 	@Override
-	public HashMap<String, Object> getAuthority(long userId, long hospitalId) {
+	public HashMap<String, Object> getAuthority(long userId, long branchId) {
 		
 		HashMap<String, Object> authorities = new HashMap<String, Object>();
 		
-		//List<String> userRoles= userRolesJpaRepo.findByUsersUserIdAndHospitalId(userId,hospitalId)
-		//		.stream().map(map -> map.getMasRole().getRoleCode()).collect(Collectors.toList());
+		List<String> userRoles= userRolesRepo.findByUsersUserIdAndBranchId(userId,branchId)
+				.stream().map(map -> map.getMasRole().getRoleCode()).collect(Collectors.toList());
 		
 		Optional<UserLog> findFirst = userLogRepo.findByUserIdOrderByUserLogIdDesc(userId).stream()
 				.filter(log -> log.getUserId().equals(userId)).findFirst();
@@ -129,7 +130,7 @@ public class UserManagmentDaoImpl implements IUserManagmentDao {
 			throw new EntityNotFoundException(UserLog.class, "UserId", String.valueOf(userId));
 		}
 		
-		//authorities.put("userRoles", userRoles);
+		authorities.put("userRoles", userRoles);
 		authorities.put("refToken", findFirst.get().getRefreshToken());
 		return authorities;
 	}

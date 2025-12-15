@@ -72,7 +72,7 @@ private final static Logger logger = LoggerFactory.getLogger(UserManagmentServic
 			if(userLog.containsKey("ipAddress"))
 				userLogs.setIpAddress((String) userLog.get("ipAddress"));
 
-			userLogs.setIsLoggedIn('Y');
+			userLogs.setIsLoggedIn(true);;
 		}
 
 		if(userLog.containsKey("refreshToken"))

@@ -23,6 +23,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -31,17 +32,15 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFilter{
 
-	//@Value("${jwt.http.request.header}")
-	private String tokenHeader ="Authorization";
+	private static final String AUTH_HEADER = "Authorization";
+    private static final String BEARER_PREFIX = "Bearer ";
 	
 	private final UserManagmentApi userManageApi;
-	//this.oAuthTokenUtil = oAuthTokenUtil;
 	
-	JwtTokenAuthorizationOncePerRequestFilter(UserManagmentApi userManageApi){
-		this.userManageApi = userManageApi;
-	}
+	
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -50,17 +49,17 @@ public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFil
 
 		log.debug("Authentication Request For '{}'", request.getRequestURL());
 
-		final String requestTokenHeader = request.getHeader(this.tokenHeader);
+		final String requestTokenHeader = request.getHeader(AUTH_HEADER);
 
 		String reqURI = request.getRequestURI();
 
-		if(reqURI.contains("/config/branch")  ) { 
+		if(reqURI.equals("/config/")) { 
 			//|| reqURI.contains("/awamss/refresh") ||reqURI.contains("/awamss/logout")
-			//logger.info("Filter ByPass For :: "+reqURI);
+			logger.info("Filter ByPass For :: "+reqURI);
 		}else {
 			String username = null;
 			String jwtToken = null;
-			if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+			if (requestTokenHeader != null && requestTokenHeader.startsWith(BEARER_PREFIX)) {
 				jwtToken = requestTokenHeader.substring(7);
 				try {
     				username = Auth2TokenUtil.getUsernameFromToken(jwtToken);
@@ -68,12 +67,6 @@ public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFil
     				logger.error("JWT_TOKEN_UNABLE_TO_GET_USERNAME", e);
     				throw new AuthenticationException("JWT_TOKEN_UNABLE_TO_GET_USERNAME", e);
     			} 
-//				catch (ExpiredJWTException e) {
-//    				logger.warn("JWT_TOKEN_EXPIRED", e);
-//    				throw new AuthenticationException("USER_DISABLED", e);
-//    			} catch(MalformedJwtException e) {
-//    				throw new AuthenticationException("MalformedJwtException", e);
-//    			}
 			} else {
 				logger.warn("JWT_TOKEN_DOES_NOT_START_WITH_BEARER_STRING");
 			}
@@ -84,6 +77,7 @@ public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFil
     			//UserDetails userDetails = this.jwtInMemoryUserDetailsService.loadUserByUsername(username);
 
     			HashMap<String, Object> validMap = userManageApi.getAuthority(claimsData.getUserId(), claimsData.getBranchId());
+    			
     			@SuppressWarnings("unchecked")
 				List<String> userRoles = (List<String>) validMap.get("userRoles");
 
@@ -97,6 +91,7 @@ public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFil
     					.collect(Collectors.toList());
 
     			ClaimsData claimsDataNew = ClaimsData.builder()
+    					
     					.UserId(claimsData.getUserId())
     					.UserName(claimsData.getUserName())
     					.LoginName(claimsData.getLoginName())

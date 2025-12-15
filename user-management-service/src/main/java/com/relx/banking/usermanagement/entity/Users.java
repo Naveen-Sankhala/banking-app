@@ -41,6 +41,9 @@ public class Users implements Serializable {
 	@Column(name ="Customer_Id")
 	private Long customerId;
 	
+	@Column(name ="Branch_Id")
+	private Long branchId;
+	
 	@Column(name="User_Name", nullable = false, unique = true, length = 20)
 	private String username;
 	
