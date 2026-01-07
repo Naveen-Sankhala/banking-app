@@ -1,14 +1,4 @@
 # ===============================
-# If Override properties
-# ===============================
-#spring:
-# cloud:
-#  config:
-#   allowOverride: true
-#   overrideNone: true
-#   overrideSystemProperties: false
-
-# ===============================
 # Eureka discovery client 
 # ===============================
 eureka:

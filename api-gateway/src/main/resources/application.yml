@@ -9,46 +9,9 @@ eureka:
 spring:
  application:
   name: api-gateway
- cloud:
-  config:
-   profile: dev
-  gateway:
-   default-filters:
-    - TokenRelay
-   routes:
-    - id: user-service
-      uri: lb://USER-MANAGEMENT-SERVICE
-      predicates:
-       - Path=/User/**
-    - id: bank-config-service
-      uri: lb://BANK-CONFIG-SERVICE
-      predicates:
-       - Path=/config/**
-    - id: customer-service
-      uri: lb://CUSTOMER-SERVICE
-      predicates:
-       - Path=/Customer/**
-    - id: account-service
-      uri: lb://ACCOUNT-SERVICE
-      predicates:
-       - Path=/Account/**
-    - id: transaction-service
-      uri: lb://TRANSACTION-SERVICE
-      predicates:
-       - Path=/Transaction/**
-    - id: loan-service
-      uri: lb://LOAN-SERVICE
-      predicates:
-       - Path=/Loan/**
-    - id: fraud-detection-service
-      uri: lb://FRAUD-DETECTION-SERVICE
-      predicates:
-       - Path=/Fraud-detect/**
-    - id: notification-service
-      uri: lb://NOTIFIATION-SERVICE
-      predicates:
-       - Path=/Notification/**
-
+ profiles:
+  active: dev
+  
  security:
   oauth2:
    client:
@@ -66,6 +29,3 @@ spring:
    resourceserver:
     jwt:
      issuer-uri: http://auth-service/Auth
-
- main:
-  web-application-type: reactive
