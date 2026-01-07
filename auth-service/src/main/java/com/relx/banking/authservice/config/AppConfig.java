@@ -21,8 +21,8 @@ public class AppConfig implements Serializable {
 	@Value("${spring.cloud.config.profile}")
 	private String enviornment;
 
-//	@Value("${cors.url}")
-//	private String corsUrl;
+	@Value("${cors.url}")
+	private String corsUrl;
 
 	@Value("${spring.security.oauth2.authorizationserver.issuer}")
 	private String authorizationServerIssuer;

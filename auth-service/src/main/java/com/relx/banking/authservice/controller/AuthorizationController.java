@@ -54,7 +54,7 @@ import jakarta.validation.Valid;
  */
 @RestController
 @RequestMapping("oauth")
-//@CrossOrigin(origins = "${cors.url}")
+@CrossOrigin(origins = "${cors.url}")
 @Tag(name = "authorization-controller", description = "Set of endpoints for Login in Application.")
 public class AuthorizationController {
 
