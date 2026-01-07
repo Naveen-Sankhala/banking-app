@@ -47,20 +47,20 @@ public class Auth2TokenUtil {
 		try {
 			claims = getAllClaimsFromToken(token);
 		} catch (ParseException | JOSEException e) {
-			logger.error("Invalid Token");
+			logger.error("Invalid Token :: " +e.getMessage());
+			throw new AuthenticationException("Invalid Token ::" +e.getMessage());
 		}
 		return claimsResolver.apply(claims);
 	}
 
 	private static JWTClaimsSet getAllClaimsFromToken(String token) throws ParseException, JOSEException {
 		SignedJWT jwt = SignedJWT.parse(token);
-		//ClaimsData claimsData = parseToken(token);
-
-//		Boolean isVerify = validateToken(token,claimsData);
-//		if(!isVerify)
-//			throw new AuthenticationException("Invalid refresh token");
 		
 		JWTClaimsSet claims = jwt.getJWTClaimsSet();
+		Date expiration = claims.getExpirationTime();
+		if(expiration.before(Date.from(Instant.now())))
+			throw new AuthenticationException("Invalid Token,Token is Expired, It's valid till :: "+ expiration);
+			
 		return claims;
 	}
 

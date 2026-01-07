@@ -2,19 +2,18 @@ package com.relx.banking.bankconfig.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.relx.banking.bankconfig.service.IMasterService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.ws.rs.PathParam;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -24,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/")
+@RequestMapping("/master")
 @CrossOrigin(origins = "${cross.url}")
 @Tag(name ="Master-controller", description = "Set of end points retrieving & store Configuration details")
 public class MasterController {
@@ -44,6 +43,12 @@ public class MasterController {
     public ResponseEntity<?> getAllCity(@PathVariable("state-id") Long stateId) {
 		return ResponseEntity.status(HttpStatus.OK).body(iMasterService.getAllCity(stateId));
     }
+	
+	@GetMapping("master/state_city")
+	public ResponseEntity<?> getCityNameAndStateNameDetails(@RequestParam("state-name") String stateName,@RequestParam("city-name") String cityName){
+		return ResponseEntity.status(HttpStatus.OK).body(iMasterService.getCityNameAndStateNameDetails(stateName,cityName));
+	}
+
 	
 	@GetMapping("currency/{country-id}")
     public ResponseEntity<?> getCurrency(@PathVariable("country-id") Long countryId) {

@@ -11,6 +11,7 @@ C:\work-space\banking-app\shared-common-dto\src\main\java\com\relx\banking\commo
 C:\work-space\banking-app\shared-common-dto\src\main\java\com\relx\banking\commondto\MasCurrencyDto.java
 C:\work-space\banking-app\shared-common-dto\src\main\java\com\relx\banking\eventchanged\ConfigChangedEvent.java
 C:\work-space\banking-app\shared-common-dto\src\main\java\com\relx\banking\commondto\BankConfigurationDto.java
+C:\work-space\banking-app\shared-common-dto\src\main\java\com\relx\banking\commonsecurity\FeignTokenInterceptor.java
 C:\work-space\banking-app\shared-common-dto\src\main\java\com\relx\banking\commondto\CityDto.java
 C:\work-space\banking-app\shared-common-dto\src\main\java\com\relx\banking\util\ApiSubError.java
 C:\work-space\banking-app\shared-common-dto\src\main\java\com\relx\banking\commonsecurity\JwtTokenResponse.java

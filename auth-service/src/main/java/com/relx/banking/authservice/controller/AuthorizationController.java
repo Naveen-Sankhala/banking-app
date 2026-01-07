@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.relx.banking.authservice.client.BankConfigApi;
+import com.relx.banking.authservice.client.UserManagmentApi;
 import com.relx.banking.authservice.entity.UserRoles;
 import com.relx.banking.authservice.entity.Users;
 import com.relx.banking.authservice.oauth2.OAuth2TokenUtil;
@@ -53,7 +54,7 @@ import jakarta.validation.Valid;
  */
 @RestController
 @RequestMapping("oauth")
-@CrossOrigin(origins = "${corss.url}")
+//@CrossOrigin(origins = "${cors.url}")
 @Tag(name = "authorization-controller", description = "Set of endpoints for Login in Application.")
 public class AuthorizationController {
 
@@ -72,6 +73,9 @@ public class AuthorizationController {
 
 	@Autowired
 	private OAuth2TokenUtil authTokenUtill;
+	
+	@Autowired
+	private UserManagmentApi userManageApi;
 
 	@Autowired
 	private MessageSource messageSource; 
@@ -107,7 +111,9 @@ public class AuthorizationController {
 		//			}
 		//		}
 
-		//BranchDetailsRecord branInfo = bankConfigApi.getBranchDetails(branchId, null);
+		BranchDetailsRecord branInfo = bankConfigApi.getBranchDetails(branchId, null);
+		
+		//final HashMap<String, Object> userDetailsMap = userManageApi.findUserByUsername(username,branchId);
 
 		final HashMap<String, Object> userDetailsMap = iAuthService.loadUserByUsername(username,branchId);
 
@@ -122,12 +128,12 @@ public class AuthorizationController {
 					.collect(Collectors.toList());
 
 			boolean hasAccess = userRoles.stream()
-					.anyMatch(role -> role.getBranchId().equals(1));
+					.anyMatch(role -> role.getBranchId().equals(branInfo.branchId()));
 
-			final String sBranchName = hasAccess ? "branInfo.branchName()" : null;
-			final String sBranchType = hasAccess ? "branInfo.branchType()" : null;
+			final String sBranchName = hasAccess ? branInfo.branchName() : null;
+			final String sBranchType = hasAccess ? branInfo.branchType() : null;
 
-			logger.info("Branch Access → ID: {}, Name: {}, Type: {}",1 , sBranchName, sBranchType);//branInfo.branchId()
+			logger.info("Branch Access → ID: {}, Name: {}, Type: {}",branInfo.branchId() , sBranchName, sBranchType);
 
 			final String token = authTokenUtill.generateAccessToken((Users)userDetailsMap.get("user"),roles,branchId,sBranchName,sBranchType,"access");		
 			final String refreshToken = authTokenUtill.generateAccessToken((Users)userDetailsMap.get("user"),roles,branchId,sBranchName,sBranchType,"refresh");
@@ -216,7 +222,7 @@ public class AuthorizationController {
 		return ResponseEntity.ok(iAuthService.getMenus(roles));
 	}
 
-	@DeleteMapping(value = "${spring.security.oauth2.logout.token-uri}")
+	@PostMapping(value = "${spring.security.oauth2.logout.token-uri}")
 	@ApiOperation(value = "LogOut Request.", notes = " Also Destroyed the refresh token..")
 	ResponseEntity<?> logout(
 			@ApiParam("refreshToken Field to be obtained. Cannot be empty.") 

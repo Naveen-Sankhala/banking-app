@@ -6,11 +6,13 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.relx.banking.commonsecurity.FeignTokenInterceptor;
+
 /**
  * @author Naveen.Sankhala
  * Dec 10, 2025
  */
-@FeignClient(name = "user-management-service", url = "${user-service.url}")
+@FeignClient(name = "user-management-service", url = "${user-service.url}",configuration=FeignTokenInterceptor.class)
 public interface UserManagmentApi {
 
 	@GetMapping("authority")

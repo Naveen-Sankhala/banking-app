@@ -2,8 +2,25 @@ spring:
  application.name: user-management-service
  profiles:
   active: dev
-  
+ security:
+  oauth2:
+   authorizationserver:
+    issuer: http://localhost:9003
+   resourceserver:
+    jwt:
+     issuer-uri: http://auth-service/Auth
+   client-id: bank-web
+   client-secret: secret
+   redirect-uri:
+   authorization-uri: /oauth2/authorize
+   get.token-uri: /token
+   refresh.token-uri: /refresh
+   logout.token-uri: /logout 
+
 server:
  port: 9010
  servlet:
   context-path: /User
+  
+internal:
+ api-key: my-internal-key

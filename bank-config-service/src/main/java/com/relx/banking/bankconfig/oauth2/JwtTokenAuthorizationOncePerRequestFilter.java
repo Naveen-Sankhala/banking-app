@@ -53,8 +53,7 @@ public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFil
 
 		String reqURI = request.getRequestURI();
 
-		if(reqURI.equals("/config/")) { 
-			//|| reqURI.contains("/awamss/refresh") ||reqURI.contains("/awamss/logout")
+		if(reqURI.contains("/config/common/") || reqURI.contains("/Auth/oauth/refresh") ||reqURI.contains("/Auth/oauth/logout")) { 
 			logger.info("Filter ByPass For :: "+reqURI);
 		}else {
 			String username = null;

@@ -1,6 +1,7 @@
 package com.relx.banking.bankconfig.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,5 +105,10 @@ public class MasterServiceImpl implements IMasterService {
 	@Override
 	public Object getMasStatus(String statusCode, String statusTable) {
 		return iMasterDao.getMasStatus(statusCode,statusTable);
+	}
+
+	@Override
+	public Map<String,Object> getCityNameAndStateNameDetails(String stateName, String cityName) {
+		return iMasterDao.getStateAndCityInformation(stateName,cityName);
 	}
 }

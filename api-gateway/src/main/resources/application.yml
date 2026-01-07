@@ -1,75 +1,71 @@
 server:
  port: 9004
-# servlet:
-#  context-path: /gateway
 
 eureka:
  client:
   service-url:
    defaultZone: http://localhost:9001/eureka/
-
-spring:   
-# security:
-#  oauth2:
-#   resourceserver:
-#    jwt:
-#     issuer-uri: http://localhost:9003  # auth-server issuer
    
-
+spring:
  application:
   name: api-gateway
  cloud:
   config:
    profile: dev
-#  gateway:
-#   routes:
-#    - id: bank-config-service
-#      uri: lb://BANK-CONFIG-SERVICE
-#      predicates:
-#       - Path=/config/**
-#      filters:
-#       - PreserveHostHeader=true
-#       - AddRequestHeader=X-Source, api-gateway
-#    - id: customer-service
-#      uri: lb://CUSTOMER-SERVICE
-#      predicates:
-#       - Path=/Customer/**
-#      filters:
-#       - PreserveHostHeader=true
-#       - AddRequestHeader=X-Source, api-gateway
-#    - id: account-service
-#      uri: lb://ACCOUNT-SERVICE
-#      predicates:
-#       - Path=/Account/**
-#      filters:
-#       - PreserveHostHeader=true
-#       - AddRequestHeader=X-Source, api-gateway  
-#    - id: transaction-service
-#      uri: lb://TRANSACTION-SERVICE
-#      predicates:
-#       - Path=/Transaction/**
-#      filters:
-#       - PreserveHostHeader=true
-#       - AddRequestHeader=X-Source, api-gateway 
-#    - id: loan-service
-#      uri: lb://LOAN-SERVICE
-#      predicates:
-#       - Path=/Loan/**
-#      filters:
-#       - PreserveHostHeader=true
-#       - AddRequestHeader=X-Source, api-gateway
-#    - id: fraud-detection-service
-#      uri: lb://FRAUD-DETECTION-SERVICE
-#      predicates:
-#       - Path=/Fraud-detect/**
-#      filters:
-#       - PreserveHostHeader=true
-#       - AddRequestHeader=X-Source, api-gateway
-#    - id: notification-service
-#      uri: lb://NOTIFIATION-SERVICE
-#      predicates:
-#       - Path=/Notification/**
-#      filters:
-#       - PreserveHostHeader=true
-#       - AddRequestHeader=X-Source, api-gateway
-       
+  gateway:
+   default-filters:
+    - TokenRelay
+   routes:
+    - id: user-service
+      uri: lb://USER-MANAGEMENT-SERVICE
+      predicates:
+       - Path=/User/**
+    - id: bank-config-service
+      uri: lb://BANK-CONFIG-SERVICE
+      predicates:
+       - Path=/config/**
+    - id: customer-service
+      uri: lb://CUSTOMER-SERVICE
+      predicates:
+       - Path=/Customer/**
+    - id: account-service
+      uri: lb://ACCOUNT-SERVICE
+      predicates:
+       - Path=/Account/**
+    - id: transaction-service
+      uri: lb://TRANSACTION-SERVICE
+      predicates:
+       - Path=/Transaction/**
+    - id: loan-service
+      uri: lb://LOAN-SERVICE
+      predicates:
+       - Path=/Loan/**
+    - id: fraud-detection-service
+      uri: lb://FRAUD-DETECTION-SERVICE
+      predicates:
+       - Path=/Fraud-detect/**
+    - id: notification-service
+      uri: lb://NOTIFIATION-SERVICE
+      predicates:
+       - Path=/Notification/**
+
+ security:
+  oauth2:
+   client:
+    registration:
+     gateway:
+      client-id: bank-client
+      client-secret: secret
+      authorization-grant-type: client_credentials
+      scope: internal
+      provider: auth-server
+    provider:
+     auth-server:
+      token-uri: http://auth-service/Auth/oauth/token
+
+   resourceserver:
+    jwt:
+     issuer-uri: http://auth-service/Auth
+
+ main:
+  web-application-type: reactive

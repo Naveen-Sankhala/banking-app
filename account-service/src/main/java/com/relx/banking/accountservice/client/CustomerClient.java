@@ -7,13 +7,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.relx.banking.accountservice.dto.CustomerDto;
+import com.relx.banking.commonsecurity.FeignTokenInterceptor;
 
 /**
  * @author Naveen.Sankhala
  * Sep 11, 2025
  */
 
-@FeignClient(name = "customer-service", url = "${customer-service.url}")
+@FeignClient(name = "customer-service", url = "${customer-service.url}",configuration=FeignTokenInterceptor.class)
 public interface CustomerClient {
 
 	@GetMapping("/customer")

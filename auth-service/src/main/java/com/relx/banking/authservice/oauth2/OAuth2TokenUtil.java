@@ -108,6 +108,7 @@ public class OAuth2TokenUtil {
 					.claim("Roles",roles)
 					.claim("scope", List.of(appConfig.getReadScope(), appConfig.getWriteScope()))
 					.claim("TokenType", sTokenType)
+					.claim("ActorType", "Service") //User/Service
 					.build();
 
 			// Sign JWT

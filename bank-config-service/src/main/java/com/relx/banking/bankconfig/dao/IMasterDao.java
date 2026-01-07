@@ -1,6 +1,7 @@
 package com.relx.banking.bankconfig.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,6 @@ public interface IMasterDao {
 
 	List<MasCustomerConstitution> getMasCustomerConstitution();
 
-	
+	Map<String,Object> getStateAndCityInformation(String stateName,String cityName);
 
 }

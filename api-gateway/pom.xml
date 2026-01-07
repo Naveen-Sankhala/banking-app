@@ -31,34 +31,37 @@
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
 	</properties>
 	<dependencies>
+		<!-- Actuator -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
+		<!-- REACTIVE Spring Cloud Gateway -->
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-gateway-server-webmvc</artifactId>
+		  <groupId>org.springframework.cloud</groupId>
+		  <artifactId>spring-cloud-starter-gateway</artifactId>
 		</dependency>
+		<!-- Eureka -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
-		<!--<dependency>
-		  <groupId>org.springframework.cloud</groupId>
-		  <artifactId>spring-cloud-starter-gateway</artifactId>
-		</dependency>-->
-		<!--<dependency>
+		 <!-- OAuth2 Resource Server (JWT validation) -->
+		<dependency>
 		  <groupId>org.springframework.boot</groupId>
 		  <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
 		</dependency>
+		<!-- OAuth2 Client (client_credentials for downstream calls) -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>-->
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
+		<!-- LoadBalancer -->
 		<dependency>
 		    <groupId>org.springframework.cloud</groupId>
 		    <artifactId>spring-cloud-starter-loadbalancer</artifactId>
   		</dependency>
+  		<!-- Test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

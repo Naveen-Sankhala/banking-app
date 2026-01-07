@@ -46,7 +46,7 @@ public class UserManagmentController {
 	}
 	
 	@GetMapping("users")
-	public ResponseEntity<?> findUser(@RequestParam("user-name")String userName,@RequestParam("branchId")Long branchId){
+	public ResponseEntity<?> findUserByUsername(@RequestParam("user-name")String userName,@RequestParam("branchId")Long branchId){
 		logger.info("=====>> Login Request Comming From :: ");
 		final HashMap<String, Object> userDetailsMap = iUserManagmentService.loadUserByUsername(userName,branchId);
 		

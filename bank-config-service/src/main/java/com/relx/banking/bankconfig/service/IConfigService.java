@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.relx.banking.bankconfig.entity.BankConfiguration;
 import com.relx.banking.commondto.BankConfigurationDto;
+import com.relx.banking.commonrecord.BranchDetailsRecord;
 
 /**
  * @author Naveen.Sankhala
@@ -14,8 +15,8 @@ public interface IConfigService {
 
 	BankConfigurationDto getBankConfiguration();
 
-	Object getBranchDetails(Long branchId);
+	BranchDetailsRecord getBranchDetails(Long branchId);
 
-	Object getBranchDetails(String branchCode);
+	BranchDetailsRecord getBranchDetails(String branchCode);
 
 }

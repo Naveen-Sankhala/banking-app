@@ -90,6 +90,12 @@ public class ResourceServerSecurityConfig {
 
 				// OPTIONS
 				.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+				
+			    // 🔥 CONFIG SERVER (VERY IMPORTANT)
+			    .requestMatchers("/common/**").permitAll()
+
+			    // ERROR
+			    .requestMatchers("/error").permitAll()
 
 				// Auth endpoints
 				.requestMatchers(HttpMethod.POST, authenticationPath).permitAll()
@@ -97,15 +103,13 @@ public class ResourceServerSecurityConfig {
 				.requestMatchers(HttpMethod.POST, refreshPath).permitAll()
 
 				// Public GET APIs
-				.requestMatchers(HttpMethod.GET, "/config/").permitAll()
+				.requestMatchers(HttpMethod.GET, "/share/**").permitAll()
 
 				// Swagger & whitelisted
 				.requestMatchers(AUTH_WHITELIST).permitAll()
 
 				// Everything else secured
 				.anyRequest().authenticated()
-				//.requestMatchers("/auth/**").permitAll()
-				//.anyRequest().authenticated()
 				)
 
 		// Filters

@@ -1,6 +1,7 @@
 package com.relx.banking.bankconfig.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -44,5 +45,7 @@ public interface IMasterService {
 	List<CastDto> getMasCast();
 
 	List<CustomerConstitutionDto> getMasCustomerConstitution();
+
+	Map<String,Object> getCityNameAndStateNameDetails(String stateName, String cityName);
 
 }

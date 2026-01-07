@@ -33,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RefreshScope
 @RestController
-@RequestMapping("/")
+@RequestMapping("/common")
 @CrossOrigin(origins = "${cross.url}")
 @Tag(name ="Config-controller", description = "Set of end points retrieving & store Configuration details")
 public class ConfigController {
@@ -52,7 +52,7 @@ public class ConfigController {
 //        return ResponseEntity.ok("Accounts for user: " + username + "Requested by: " + subject + " scopes: " + scopes);
 //	}
 	 
-	@GetMapping("")
+	@GetMapping("all-config")
     public ResponseEntity<?> getAllCommonConfiguration() {
 		return ResponseEntity.status(HttpStatus.OK).body(configInitializer.getAllCommonConfiguration());
     }
@@ -62,7 +62,7 @@ public class ConfigController {
 		return ResponseEntity.status(HttpStatus.OK).body(iConfigService.getBankConfiguration());
 	}
 	
-    @GetMapping("/{key}")
+    @GetMapping("by-key/{key}")
     public ResponseEntity<Object> getConfigByKey(@PathVariable String key) {
         Object value = configInitializer.getConfig(key);
         if(value !=null)

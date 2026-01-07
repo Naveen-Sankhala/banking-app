@@ -70,7 +70,8 @@ public class MasterDaoImpl implements IMasterDao {
 		return masCityRepository.findByStateId(stateId);
 	}
 	
-	public Map<String,Object> getStateAndCityInformation(String cityName, String stateName) {
+	@Override
+	public Map<String,Object> getStateAndCityInformation(String stateName,String cityName) {
 		Map<String,Object> cityStateInfo = new HashMap<String, Object>();
 		MasCity city = null;
 		

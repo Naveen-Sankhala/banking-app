@@ -29,6 +29,14 @@ spring:
    connectionTimeout: 20000
    transaction-isolation: TRANSACTION_READ_COMMITTED
 # ===============================
+# Common Token URI
+# ===============================   
+ security:
+  oauth2:
+   get.token-uri: /token
+   refresh.token-uri: /refresh
+   logout.token-uri: /logout
+# ===============================
 # JPA / HIBERNATE
 # ===============================
  jpa:
@@ -107,7 +115,7 @@ management:
 #================================
 # Allow Cross-Origins
 #================================  
-cross:
+cors:
  url: "*"
 
 #================================
