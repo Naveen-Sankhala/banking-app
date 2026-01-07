@@ -8,20 +8,3 @@ spring:
   name: auth-service
  profiles:
   active: dev
- security:
-  oauth2:
-   authorizationserver:
-    issuer: http://localhost:9003
-   client-id: bank-web
-   client-secret: secret
-   redirect-uri:
-   authorization-uri: /oauth2/authorize
-   get.token-uri: /token
-   refresh.token-uri: /refresh
-   logout.token-uri: /logout
-   token-expiration: 120
-   refreshToken-expiration: 180
-   read-scope: bank.read
-   write-scope: bank.write
-   openid-scope: openid
-   profile-scope: profile

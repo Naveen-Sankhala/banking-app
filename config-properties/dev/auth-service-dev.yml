@@ -5,6 +5,21 @@ spring:
   password: LexisNexis2025!
   driver-class-name: org.postgresql.Driver
   
+ security:
+  oauth2:
+   authorizationserver:
+    issuer: http://localhost:9003
+   client-id: bank-web
+   client-secret: secret
+   redirect-uri:
+   authorization-uri: /oauth2/authorize
+   token-expiration: 120
+   refreshToken-expiration: 180
+   read-scope: bank.read
+   write-scope: bank.write
+   openid-scope: openid
+   profile-scope: profile
+  
 #================================
 # logging
 #================================
