@@ -1,4 +1,4 @@
-package com.relx.banking.usermanagement.config;
+package com.relx.banking.bankconfig.config;
 
 import java.util.Optional;
 

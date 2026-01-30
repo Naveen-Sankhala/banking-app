@@ -43,10 +43,10 @@
 		</dependency>
 		
 		<!-- For @RefreshScope (dynamic refresh of beans) -->
-		<dependency>
+		<!--<dependency>
 		    <groupId>org.springframework.cloud</groupId>
 		    <artifactId>spring-cloud-starter-bootstrap</artifactId>
-		</dependency>
+		</dependency>-->
 		
 		<!-- Optional: Spring Cloud Bus (if you want auto-refresh via Kafka/RabbitMQ) -->
 		<dependency>

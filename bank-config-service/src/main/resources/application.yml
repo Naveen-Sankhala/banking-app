@@ -11,11 +11,7 @@ spring:
  security:
   oauth2:
    resourceserver:
-    issuer: http://localhost:9003
-   redirect-uri:
-   get.token-uri: /token
-   refresh.token-uri: /refresh
-   logout.token-uri: /logout
+    issuer: http://localhost:9003/Auth # http://auth-service/Auth
 
  rabbitmq:
   listener:

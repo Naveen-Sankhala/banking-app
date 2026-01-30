@@ -13,14 +13,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  */
 
 @Configuration
-@EnableJpaAuditing
-//@EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware") change if spring security use
+@EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
 public class JpaAuditableConfig {
-	//if spring security use then remvoe this bean method
-	
+
 	@Bean
-    public AuditorAware<Long> auditorProvider() {
-        // Example: return currently logged-in user’s ID
-        return () -> Optional.of(1L); 
-    }
+	public AuditorAware<Long> springSecurityAuditorAware(
+			AuthenticationFacade authenticationFacade) {
+
+		return () -> Optional.ofNullable(authenticationFacade.getUserId());
+	}
 }

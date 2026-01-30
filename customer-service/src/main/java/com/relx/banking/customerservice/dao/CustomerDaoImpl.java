@@ -49,7 +49,7 @@ public class CustomerDaoImpl implements ICustomerDao {
 	
 	@Override
 	public Customer findCustomerByAadharAndPanNo(String aadharNumber,String panNumber) {
-		return customerRepository.findByAadharNumberAndPanNumber( aadharNumber, panNumber);
+		return customerRepository.findByCustomerDetailsAadharNumberAndCustomerDetailsPanNumber( aadharNumber, panNumber);
 	}
 
 	@Override

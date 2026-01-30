@@ -21,14 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.relx.banking.usermanagement.service.IUserManagmentService;
 import com.relx.banking.usermanagement.util.exception.ApiResponse;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 /**
  * @author Naveen.Sankhala
  * Nov 26,2025
  */
 @RestController
 @RequestMapping("")
-//@CrossOrigin(origins = "${corss.url}")
-//@Tag(name = "authorization-controller", description = "Set of endpoints for Login in Application.")
+@CrossOrigin(origins = "${cors.url}")
+@Tag(name = "authorization-controller", description = "Set of endpoints for Login in Application.")
 public class UserManagmentController {
 
 	private final static Logger logger = LoggerFactory.getLogger(UserManagmentController.class);

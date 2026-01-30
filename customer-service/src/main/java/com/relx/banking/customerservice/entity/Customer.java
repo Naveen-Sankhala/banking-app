@@ -3,14 +3,9 @@ package com.relx.banking.customerservice.entity;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
-
-import com.relx.banking.customerservice.enums.GenderEnum;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -53,28 +48,6 @@ public class Customer extends AuditableEntity implements Serializable {
 
 	@Column(name="Last_Name")
 	private String lastName;
-
-	@Enumerated(EnumType.STRING)
-	@Column(name = "Gender")
-	private GenderEnum  gender;
-	
-	@Column(name="Date_Of_Birth")
-	private LocalDate dob;
-
-	@Column(name="Aadhar_Number")
-	private String aadharNumber;
-
-	@Column(name="Pan_Number")
-	private String panNumber;
-
-	@Column(name="Contact_No")
-	private String contactNo;
-
-	@Column(name="Alternate_Contact_No")
-	private String alternateContactNo;
-
-	@Column(name="EMAIL_ID")
-	private String emailId;
 
 	@Column(name="Date_Of_Created")
 	private LocalDate dateOfCreated;

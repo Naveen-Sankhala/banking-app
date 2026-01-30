@@ -19,9 +19,9 @@ import com.relx.banking.customerservice.entity.Customer;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer,Long> {
 	
-	Customer findByAadharNumberAndPanNumber(String aadharNumber,String panNumber);
+	Customer findByCustomerDetailsAadharNumberAndCustomerDetailsPanNumber(String aadharNumber,String panNumber);
 	
-	@Query("SELECT c FROM Customer c WHERE c.aadharNumber IN :aadharNumbers AND c.panNumber IN :panNumbers")
+	@Query("SELECT c FROM Customer c JOIN c.customerDetails d WHERE d.aadharNumber IN :aadharNumbers AND d.panNumber IN :panNumbers")
 	List<Customer> findByAadharAndPanIn(@Param("aadharNumbers") List<String> aadharNumbers,@Param("panNumbers") List<String> panNumbers);
 	
 	Optional<Customer> findByCustomerIdAndStatus(Long customerId, String status);

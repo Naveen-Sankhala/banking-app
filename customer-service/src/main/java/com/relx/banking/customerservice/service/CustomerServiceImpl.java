@@ -76,15 +76,17 @@ public class CustomerServiceImpl implements ICustomerService {
 	@Override
 	public String createNewCustomer(CustomerRequestDto customerRequest) {
 		List<Address> addressList = new ArrayList<Address>();
-		
-		Customer isCustomerExist = iCustomerDao.findCustomerByAadharAndPanNo(customerRequest.getAadharNumber(), customerRequest.getPanNumber());
-				if (isCustomerExist !=null) {
-					throw new InvalidCustomerException("Customer already exist !!!");
-				}
+		String aadharNoumber = customerRequest.getCustomerDetails().getAadharNumber();
+		String panNumber =customerRequest.getCustomerDetails().getAadharNumber();
+
+		Customer isCustomerExist = iCustomerDao.findCustomerByAadharAndPanNo(aadharNoumber, panNumber);
+		if (isCustomerExist !=null) {
+			throw new InvalidCustomerException("Customer already exist !!!");
+		}
 
 		Customer customerMapper = CustomerMapper.INSTANCE.customerDTOToCustomer(customerRequest);
 		CustomerDetails customerDetails = CustomerDetailsMapper.INSTANCE.customerDetailsDTOToCustomerDetails(customerRequest.getCustomerDetails());
-		
+
 		if(customerRequest.getAddress() !=null && !customerRequest.getAddress().isEmpty()) {
 			for(CustomerAddressDto custAddressDto: customerRequest.getAddress()) {
 				Address addressMapper = AddressMapper.INSTANCE.customerAddressDTOToCustomerAddress(custAddressDto);
@@ -239,7 +241,7 @@ public class CustomerServiceImpl implements ICustomerService {
 					logger.error("Gender Cann't be blank");
 					inputError.append("Customer Gender Blank | ");
 				}else {	
-					custReqDto.setGender(CustomerUtil.getCellValue(row.getCell(5)));
+					customerDetailsDto.setGender(CustomerUtil.getCellValue(row.getCell(5)));
 				}
 				
 				if(row.getCell(6) == null) {
@@ -281,7 +283,7 @@ public class CustomerServiceImpl implements ICustomerService {
 					logger.error("DOB Cann't be blank");
 					inputError.append("Customer DOB Blank | ");
 				}else {	
-					custReqDto.setDob(CustomerUtil.stringToLocalDate(CustomerUtil.getCellValue(row.getCell(11))));
+					customerDetailsDto.setDob(CustomerUtil.stringToLocalDate(CustomerUtil.getCellValue(row.getCell(11))));
 					customerDetailsDto.setMajorDate(CustomerUtil.stringToLocalDate(CustomerUtil.getCellValue(row.getCell(11)))); 
 				}
 				
@@ -295,12 +297,12 @@ public class CustomerServiceImpl implements ICustomerService {
 				}else {	
 					Customer isExistCust = iCustomerDao.findCustomerByAadharAndPanNo(CustomerUtil.getCellValue(row.getCell(12)), CustomerUtil.getCellValue(row.getCell(13)));
 					if(isExistCust != null) {
-						logger.error("Customer already exist for this Pan :"+isExistCust.getPanNumber()+" & Aadhar No :"+isExistCust.getAadharNumber()+ "Find this CIF No:"+ isExistCust.getCustomerIdentificationNo()+"!!!");
-						inputError.append("Customer already exist for this Pan :"+isExistCust.getPanNumber()+" & Aadhar No :"+isExistCust.getAadharNumber()+ "Find this CIF No:"+ isExistCust.getCustomerIdentificationNo()+"!!!");
+						logger.error("Customer already exist for this Pan :"+isExistCust.getCustomerDetails().getPanNumber()+" & Aadhar No :"+isExistCust.getCustomerDetails().getAadharNumber()+ "Find this CIF No:"+ isExistCust.getCustomerIdentificationNo()+"!!!");
+						inputError.append("Customer already exist for this Pan :"+isExistCust.getCustomerDetails().getPanNumber()+" & Aadhar No :"+isExistCust.getCustomerDetails().getAadharNumber()+ "Find this CIF No:"+ isExistCust.getCustomerIdentificationNo()+"!!!");
 
 					}else {
-						custReqDto.setAadharNumber(CustomerUtil.getCellValue(row.getCell(12)));
-						custReqDto.setPanNumber(CustomerUtil.getCellValue(row.getCell(13)));
+						customerDetailsDto.setAadharNumber(CustomerUtil.getCellValue(row.getCell(12)));
+						customerDetailsDto.setPanNumber(CustomerUtil.getCellValue(row.getCell(13)));
 					}
 				}
 				
@@ -314,12 +316,12 @@ public class CustomerServiceImpl implements ICustomerService {
 					logger.error("Contact No/ Mobile No Cann't be blank");
 					inputError.append("Customer Contact No/ Mobil Name Blank | ");
 				}else {
-					custReqDto.setContactNo(CustomerUtil.getCellValue(row.getCell(18)));
+					customerDetailsDto.setContactNo(CustomerUtil.getCellValue(row.getCell(18)));
 				}
 				
-				custReqDto.setAlternateContactNo(row.getCell(19) == null ? null : CustomerUtil.getCellValue(row.getCell(19)));
+				customerDetailsDto.setAlternateContactNo(row.getCell(19) == null ? null : CustomerUtil.getCellValue(row.getCell(19)));
 				
-				custReqDto.setEmailId(row.getCell(20) == null ? null : CustomerUtil.getCellValue(row.getCell(20)));
+				customerDetailsDto.setEmailId(row.getCell(20) == null ? null : CustomerUtil.getCellValue(row.getCell(20)));
 				
 				customerDetailsDto.setIsMinor(CustomerUtil.getCellValue(row.getCell(21)) == "" ? 'N' : CustomerUtil.stringToCharcter(CustomerUtil.getCellValue(row.getCell(21))));
 				customerDetailsDto.setHasNominee(CustomerUtil.getCellValue(row.getCell(22)) == "" ? 'N' : CustomerUtil.stringToCharcter(CustomerUtil.getCellValue(row.getCell(22))));
@@ -486,23 +488,55 @@ public class CustomerServiceImpl implements ICustomerService {
 			}
 		}
 		
+		CustomerDetailsDto customerDetailsDto = custReqDto.getCustomerDetails();
+		CustomerDetails customerDetails = CustomerDetails.builder()
+				.gender(GenderEnum.fromString(customerDetailsDto.getGender()))
+				.dob(customerDetailsDto.getDob())
+				.isMinor(customerDetailsDto.getIsMinor())
+				.majorDate(customerDetailsDto.getMajorDate())
+				.maritalStatus(customerDetailsDto.getMaritalStatus())
+				.hasGuardian(customerDetailsDto.getHasGuardian())
+				.guardianType(customerDetailsDto.getGuardianType())
+				.hasNominee(customerDetailsDto.getHasNominee())
+				.occupationId(customerDetailsDto.getOccupationId())
+				.constitutionId(customerDetailsDto.getConstitutionId())
+				.religionId(customerDetailsDto.getReligionId())
+				.casteId(customerDetailsDto.getCasteId())
+				.relationType(customerDetailsDto.getRelationType())
+				.husbandFatherTitle(customerDetailsDto.getHusbandFatherTitle())
+				.husbandFatherName(customerDetailsDto.getHusbandFatherName())
+				.motherRelation(customerDetailsDto.getMotherRelation())
+				.motherTitle(customerDetailsDto.getMotherTitle())
+				.motherName(customerDetailsDto.getMotherName())
+				.educationQual(customerDetailsDto.getEducationQual())
+				.numDependents(customerDetailsDto.getNumDependents())
+				.nationalIdNumber(customerDetailsDto.getNationalIdNumber())
+				//.aadharNumber(customer.getCustomerDetails().getAadharNumber())
+				//.panNumber(customer.getCustomerDetails().getPanNumber())
+				.gstInNumber(customerDetailsDto.getGstInNumber())
+				.passportNumber(customerDetailsDto.getPassportNumber())
+				.passportPlaceIssue(customerDetailsDto.getPassportPlaceIssue())
+				.passportIssueDate(customerDetailsDto.getPassportIssueDate())
+				.passportExpiryDate(customerDetailsDto.getPassportExpiryDate())
+				.contactNo(customerDetailsDto.getContactNo())
+				.alternateContactNo(customerDetailsDto.getAlternateContactNo())
+				.emailId(customerDetailsDto.getEmailId())
+				//.currencyId(null)
+				.membershipNumber(customerDetailsDto.getMembershipNumber())
+				.employeeNumber(customerDetailsDto.getEmployeeNumber())
+				.accountManager(customerDetailsDto.getAccountManager())
+				.customerGroup(customerDetailsDto.getCustomerGroup())
+				.build();
+		
 		Customer customerBuilder = Customer.builder()
 				.customerId(customer.getCustomerId())
 				.customerIdentificationNo(customer.getCustomerIdentificationNo())
 				.firstName(custReqDto.getFirstName())
 				.middleName(custReqDto.getMiddleName())
 				.lastName(custReqDto.getLastName())
-				.gender(GenderEnum.fromString(custReqDto.getGender()))
-				.dob(custReqDto.getDob())
-				.aadharNumber(custReqDto.getAadharNumber())
-				.panNumber(custReqDto.getPanNumber())
-				.contactNo(custReqDto.getContactNo())
-				.alternateContactNo(custReqDto.getAlternateContactNo())
-				.emailId(custReqDto.getEmailId())
+				
+				.customerDetails(customerDetails)
 				.address(addressList)
-//				.createdBy(custReqDto.getCreatedBy())
-//				.createdDate(customer.getCreatedDate())
-//				.lastChgBy(custReqDto.getLastChgBy())
 				.build();
 		boolean updated = iCustomerDao.saveCustomer(customerBuilder) != null;
 		
@@ -544,7 +578,7 @@ public class CustomerServiceImpl implements ICustomerService {
                 customer.getCustomerId(),
                 customer.getFirstName(),
                 customer.getLastName(),
-                customer.getEmailId(),
+                customer.getCustomerDetails().getEmailId(),
                 accounts
         );
     }

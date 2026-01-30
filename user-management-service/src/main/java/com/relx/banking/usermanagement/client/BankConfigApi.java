@@ -21,7 +21,7 @@ import com.relx.banking.commonsecurity.FeignTokenInterceptor;
  * Nov 26, 2025
  */
 
-@FeignClient(name = "bank-config-service", url = "${config-service.url}",configuration=FeignTokenInterceptor.class)
+@FeignClient(name = "bank-config-service",configuration=FeignTokenInterceptor.class)
 public interface BankConfigApi {
 	
 	@GetMapping("/common/all-config")

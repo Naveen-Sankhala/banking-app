@@ -5,10 +5,10 @@ spring:
  security:
   oauth2:
    authorizationserver:
-    issuer: http://localhost:9003
+    issuer: http://localhost:9003/Auth
    resourceserver:
     jwt:
-     issuer-uri: http://auth-service/Auth
+     issuer-uri: http://localhost:9003/Auth
    client-id: bank-web
    client-secret: secret
    redirect-uri:

@@ -38,7 +38,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  */
 @RestController
 @RequestMapping("/customer")
-@CrossOrigin(origins = "${cross.url}")
+@CrossOrigin(origins = "${cors.url}")
 @Tag(name ="Customer-controller", description = "Set of end points retrieving & store Customerdetails")
 public class CustomerController {
 

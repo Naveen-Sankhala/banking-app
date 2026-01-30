@@ -33,7 +33,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  */
 @RestController
 @RequestMapping("/accounts")
-@CrossOrigin(origins = "${cross.url}")
+@CrossOrigin(origins = "${cors.url}")
 @Tag(name ="Account-controller", description = "Set of end points retrieving & store Account details")
 public class AccountController {
 

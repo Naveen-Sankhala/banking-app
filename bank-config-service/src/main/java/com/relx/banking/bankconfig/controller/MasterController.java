@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/master")
-@CrossOrigin(origins = "${cross.url}")
+@CrossOrigin(origins = "${cors.url}")
 @Tag(name ="Master-controller", description = "Set of end points retrieving & store Configuration details")
 public class MasterController {
 	

@@ -36,8 +36,8 @@ public class ResourceServerSecurityConfig {
 	private final JwtTokenAuthorizationOncePerRequestFilter jwtAuthenticationFilter;
 	private final FilterChainExceptionHandler filterChainExceptionHandler;
 
-	@Value("${cross.url}")
-	private String corssUrl;
+	@Value("${cors.url}")
+	private String corsUrl;
 
 	@Value("${spring.security.oauth2.get.token-uri}")
 	private String authenticationPath;
@@ -54,7 +54,7 @@ public class ResourceServerSecurityConfig {
 
 		CorsConfiguration config= new CorsConfiguration();
 		config.setAllowCredentials(true);
-		config.setAllowedOrigins(Arrays.asList(corssUrl));
+		config.setAllowedOrigins(Arrays.asList(corsUrl));
 		config.setAllowedHeaders(Arrays.asList("*"));
 		config.setAllowedMethods(Arrays.asList("OPTIONS","GET","PUT","POST","DELETE"));
 

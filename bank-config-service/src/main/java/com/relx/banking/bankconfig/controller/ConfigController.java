@@ -34,7 +34,7 @@ import lombok.RequiredArgsConstructor;
 @RefreshScope
 @RestController
 @RequestMapping("/common")
-@CrossOrigin(origins = "${cross.url}")
+@CrossOrigin(origins = "${cors.url}")
 @Tag(name ="Config-controller", description = "Set of end points retrieving & store Configuration details")
 public class ConfigController {
 
